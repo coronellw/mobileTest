@@ -1,0 +1,34 @@
+body {
+	background: #777;
+	border: 3px solid black;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5 {
+	padding: 0;
+	margin: 0;
+}
+
+.error {
+	background: #f00;
+	border: 1px solid white;
+	color: white;
+}
+
+.waiting {
+	background: #ff0;
+	border: 1px solid black;
+	color: black;
+}
+
+.success {
+	background: #0f0;
+	border: 1px solid white;
+	color: white;
+}
+
+.uninit {
+	background: #777;
+	border: 1px solid black;
+	color: black;
+}

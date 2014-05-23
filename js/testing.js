@@ -1,7 +1,15 @@
 window.onload = function(){
-	document.body.onclick = handleClick;
 	test.baseClass = document.body.className;
-	console.log("body classes are "+test.baseClass);
+	test.container = document.getElementsByClassName("ui-page")[0]
+	test.container.classList.add('uninitialized');
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		console.log("You are using "+ navigator.userAgent);
+		jQuery(".ui-page").on("tap", handleClick);
+		test.set_devise(navigator.userAgent);
+		document.getElementById("equipment").innerHTML = test.get_devise();
+	}else{
+		document.body.onclick = handleClick;
+	};
 	document.body.style.width = screen.width;
 	document.body.style.height = screen.height;
 };
@@ -19,7 +27,9 @@ var test = {
 	status : 0,
 	phase : 0,
 	timeout : 0,
+	devise : 'undefined',
 	baseClass : 'uninit',
+	container :  'undefined',
 	phases : [
 			{
 				name : "uninitialized",
@@ -78,6 +88,12 @@ var test = {
 	},
 	get_phase : function(){
 		return this.phase;
+	},
+	set_devise : function(devise){
+		this.devise = devise;
+	},
+	get_devise : function(){
+		return this.devise;
 	}
 };
 
@@ -105,7 +121,13 @@ function handleClick(){
 				case 1:
 					window.clearTimeout(test.timeout);
 					success();
-					document.body.onclick = doubleTap;
+					if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+						jQuery(".ui-page").on("tap", null);
+						jQuery(".ui-page").on("tap", null);
+						console.log("mobile detected");
+					}else{
+						document.body.onclick = doubleTap;
+					};
 					// document.body.ondblclick = handleClick;
 					nextPhase();
 				break;
@@ -120,7 +142,7 @@ function handleClick(){
 			};
 		}else{
 			if (test.get_status()===2) {
-				alert("Please wait until the next test begins");
+				console.log("Please wait until the next test begins");
 			}else{
 				startTest();
 			}
@@ -133,7 +155,7 @@ function doubleTap(evento){
 	console.log("doubleTap event on x = "+evento.pageX+" and y = "+evento.pageY);
 	if (mouse.getConsecutiveClicks() == 1) {
 		setTimeout(function(){
-			if (mouse.getConsecutiveClicks() > 1) {				
+			if (mouse.getConsecutiveClicks() > 1) {
 				handleClick();
 			} else {
 				mouse.resetConsecutiveClicks();
@@ -158,7 +180,8 @@ function updateLabels(){
 }
 
 function error(){
-	document.body.style.className = test.baseClass + 'error';
+	test.container.classList.add('error');
+	test.container.classList.remove('waiting');
 	test.set_status(3);
 	updateLabels();
 	document.body.onclick = handleClick;
@@ -166,7 +189,8 @@ function error(){
 
 function success(){
 	console.log("Should paint bg to green");
-	document.body.style.className = test.baseClass + 'success';
+	test.container.classList.add('success');
+	test.container.classList.remove('waiting');
 	test.set_status(2);
 	updateLabels();
 };
@@ -174,7 +198,8 @@ function success(){
 function waiting(time){
 	time = ((typeof time === 'number') && (time > 0)) ? time : 5000;
 	console.log("Waiting " + time/1000 + " seconds for this test");
-	document.body.classList.add('waiting');
+	test.container.classList.add('waiting');
+	test.container.classList.remove('success','uninitialized');
 	test.set_status(1);
 	updateLabels();
 	test.timeout = setTimeout(error, time);
@@ -188,8 +213,7 @@ function nextPhase(){
 };
 
 function startTest(){
-	document.body.style.backgroundColor = "#777";
-	document.body.style.border = "3px solid black";
+	test.container.classList.add('uninitialized');
 	// document.getElementById("instructions").innerHTML = "Touch anywhere in the screen to start"
 	test.set_status(0);
 	test.set_phase(0);

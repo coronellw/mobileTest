@@ -37,6 +37,11 @@ h1, h2, h3, h4, h5 {
 	cursor: pointer;
 }
 
+#parent {
+	padding-top: 250px;
+	text-align: center;
+}
+
 #instructions {
 	border: 5px solid black;
 	border-radius: 15px;

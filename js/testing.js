@@ -2,10 +2,10 @@ window.onload = function(){
 	test.baseClass = document.body.className;
 	test.container = document.getElementsByClassName("ui-page")[0]
 	test.container.classList.add('uninitialized');
-	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	if( isMobile.any() ) {
 		console.log("You are using "+ navigator.userAgent);
 		jQuery(".ui-page").on("tap", handleClick);
-		test.set_devise(navigator.userAgent);
+		test.set_devise(isMobile.deviseName());
 		document.getElementById("equipment").innerHTML = test.get_devise();
 	}else{
 		document.body.onclick = handleClick;
@@ -33,28 +33,33 @@ var test = {
 	phases : [
 			{
 				name : "uninitialized",
-				instruction : "Touch anywhere in the screen to begin with the test",
+				instruction : "( Click to start )",
 				number : 0
 			},
 			{
 				name : "singleClick",
-				instruction : "Touch anywhere in the screen",
+				instruction : "Single tap",
 				number : 1
 			},
 			{
 				name : "doubleClick",
-				instruction : "Touch twice anywhere in the screen",
+				instruction : "Double tap",
 				number : 2
 			},
 			{
 				name : "slideLeft",
-				instruction : "Slide to the left anywhere in the screen",
+				instruction : "Slide left",
 				number : 3
 			},
 			{
 				name : "slideRight",
-				instruction : "Slide to the right anywhere in the screen",
+				instruction : "Slide right",
 				number : 4
+			},
+			{
+				name : "testCompleted",
+				instruction : "All test passed",
+				number : 5
 			}
 	],
 	set_status : function(status){
@@ -121,23 +126,38 @@ function handleClick(){
 				case 1:
 					window.clearTimeout(test.timeout);
 					success();
-					if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+					// document.body.ondblclick = handleClick;
+					nextPhase();
+					if( isMobile.any() ) {
 						jQuery(".ui-page").on("tap", null);
-						jQuery(".ui-page").on("tap", null);
+						jQuery(".ui-page").on("doubletap", doubleTap);
 						console.log("mobile detected");
 					}else{
 						document.body.onclick = doubleTap;
 					};
-					// document.body.ondblclick = handleClick;
-					nextPhase();
 				break;
 
 				case 2:
 					window.clearTimeout(test.timeout);
 					success();
 					mouse.resetConsecutiveClicks();
-					document.body.onclick = handleClick;
+					test.container.onclick = null;
 					nextPhase();
+					$(test.container).on("swipe", swipeHandler);
+				break;
+
+				case 3:
+					window.clearTimeout(test.timeout);
+					success();
+					nextPhase();
+					// test.container.onclick = handleClick;
+				break;
+
+				case 4:
+					window.clearTimeout(test.timeout);
+					success();
+					nextPhase();
+					test.container.onclick = handleClick;
 				break;
 			};
 		}else{
@@ -148,20 +168,6 @@ function handleClick(){
 			}
 		}
 	}
-};
-
-function doubleTap(evento){
-	mouse.increaseConsecutiveClicks();
-	console.log("doubleTap event on x = "+evento.pageX+" and y = "+evento.pageY);
-	if (mouse.getConsecutiveClicks() == 1) {
-		setTimeout(function(){
-			if (mouse.getConsecutiveClicks() > 1) {
-				handleClick();
-			} else {
-				mouse.resetConsecutiveClicks();
-			};
-		},500);
-	};
 };
 
 function randomColorChange(){
@@ -208,7 +214,11 @@ function waiting(time){
 function nextPhase(){
 	test.timeout = setTimeout(function(){
 		test.set_phase(test.get_phase()+1);
-		waiting();
+		if (test.phases[test.get_phase()].name === "testCompleted") {
+			testComplete();
+		}else{
+			waiting();
+		};
 	}, 2000);
 };
 
@@ -218,4 +228,26 @@ function startTest(){
 	test.set_status(0);
 	test.set_phase(0);
 	updateLabels();
+}
+
+function doubleTap(evento){
+	mouse.increaseConsecutiveClicks();
+	console.log("doubleTap event on x = "+evento.pageX+" and y = "+evento.pageY);
+	if (mouse.getConsecutiveClicks() == 1) {
+		setTimeout(function(){
+			if (mouse.getConsecutiveClicks() > 1) {
+				handleClick();
+			} else {
+				mouse.resetConsecutiveClicks();
+			};
+		},500);
+	};
+};
+
+function swipeHandler() {
+	handleClick();
+};
+
+function testComplete() {
+	test.container.classList.remove('success');
 }

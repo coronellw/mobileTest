@@ -38,12 +38,13 @@ h1, h2, h3, h4, h5 {
 }
 
 #parent {
-	padding-top: 250px;
+	padding-top: 230px;
 	text-align: center;
 }
 
 #instructions {
-	border: 5px solid black;
+	border: 5px solid;
 	border-radius: 15px;
+	font-size: 4em;
 	padding: 5px 20px;
 }

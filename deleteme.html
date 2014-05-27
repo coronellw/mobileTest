@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile.css">
+	<script type="text/javascript" src="js/jquery.js" ></script>
+	<script type="text/javascript" src="js/jquery.mobile.js" ></script>
+	<script type="text/javascript" src="js/customMouseEvents.js" ></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			// jQuery("#test").on("touchstart", cme.touchStart);
+			jQuery("#test").on("touchend", cme.touchEnd);
+			jQuery("#test").on("touchmove", cme.touchMove);
+			// jQuery("#test").on("swipe", cme.swipe);
+		};
+		function testFunc() {
+			alert("swipe");
+		};
+	</script>
+</head>
+<body>
+	testing double tap and swipe
+	<div id="test" style="width: 450px; height: 450px; background: #000;">
+	</div>
+</body>
+</html>

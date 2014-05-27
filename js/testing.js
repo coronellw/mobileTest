@@ -7,6 +7,7 @@ window.onload = function(){
 		jQuery(".ui-page").on("tap", handleClick);
 		test.set_devise(isMobile.deviseName());
 		document.getElementById("equipment").innerHTML = test.get_devise();
+		test.isMobile = true;
 	}else{
 		document.body.onclick = handleClick;
 	};
@@ -30,6 +31,7 @@ var test = {
 	devise : 'undefined',
 	baseClass : 'uninit',
 	container :  'undefined',
+	isMobile : false,
 	phases : [
 			{
 				name : "uninitialized",
@@ -128,12 +130,11 @@ function handleClick(){
 					success();
 					// document.body.ondblclick = handleClick;
 					nextPhase();
-					if( isMobile.any() ) {
+					if( test.isMobile ) {
 						jQuery(".ui-page").on("tap", null);
-						jQuery(".ui-page").on("doubletap", doubleTap);
-						console.log("mobile detected");
+						jQuery(".ui-page").on("doubletap", doubleTapFunc);
 					}else{
-						document.body.onclick = doubleTap;
+						document.body.onclick = doubleTapFunc;
 					};
 				break;
 
@@ -230,9 +231,9 @@ function startTest(){
 	updateLabels();
 }
 
-function doubleTap(evento){
+function doubleTapFunc(evento){
 	mouse.increaseConsecutiveClicks();
-	console.log("doubleTap event on x = "+evento.pageX+" and y = "+evento.pageY);
+	console.log("doubleTapFunc event on x = "+evento.pageX+" and y = "+evento.pageY);
 	if (mouse.getConsecutiveClicks() == 1) {
 		setTimeout(function(){
 			if (mouse.getConsecutiveClicks() > 1) {
@@ -250,4 +251,5 @@ function swipeHandler() {
 
 function testComplete() {
 	test.container.classList.remove('success');
+	updateLabels();
 }

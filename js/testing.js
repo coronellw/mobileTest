@@ -1,10 +1,9 @@
 window.onload = function(){
 	test.baseClass = document.body.className;
-	test.container = document.getElementsByClassName("ui-page")[0]
+	test.container = document.getElementsByClassName("ui-page")[0];
 	test.container.classList.add('uninitialized');
 	if( isMobile.any() ) {
-		console.log("You are using "+ navigator.userAgent);
-		jQuery(".ui-page").on("tap", handleClick);
+		test.container.addEventListener('touchstart', startEvent, false);
 		test.set_devise(isMobile.deviseName());
 		document.getElementById("equipment").innerHTML = test.get_devise();
 		test.isMobile = true;
@@ -106,6 +105,10 @@ var test = {
 
 var mouse = {
 	consecutiveClicks : 0,
+	initialX : 0,
+	initialY : 0,
+	lastX : 0,
+	lastY : 0,
 	increaseConsecutiveClicks : function(){
 		this.consecutiveClicks+=1;
 		console.log("consecutiveClicks increased to " + this.consecutiveClicks);
@@ -131,8 +134,8 @@ function handleClick(){
 					// document.body.ondblclick = handleClick;
 					nextPhase();
 					if( test.isMobile ) {
-						jQuery(".ui-page").on("tap", null);
-						jQuery(".ui-page").on("doubletap", doubleTapFunc);
+						test.container.removeEventListener('touchstart',startEvent, false);
+						test.container.addEventListener('touchstart', doubleTapFunc, false);
 					}else{
 						document.body.onclick = doubleTapFunc;
 					};
@@ -144,13 +147,17 @@ function handleClick(){
 					mouse.resetConsecutiveClicks();
 					test.container.onclick = null;
 					nextPhase();
-					$(test.container).on("swipe", swipeHandler);
+					test.container.removeEventListener('touchstart', doubleTapFunc, false);
+					test.container.addEventListener('touchstart', savePosition, false);
+					test.container.addEventListener('touchend', verifyLeftSwipe, false);
 				break;
 
 				case 3:
 					window.clearTimeout(test.timeout);
 					success();
 					nextPhase();
+					test.container.removeEventListener('touchend', verifyLeftSwipe, false);
+					test.container.addEventListener('touchend', verifyRightSwipe, false);
 					// test.container.onclick = handleClick;
 				break;
 
@@ -158,6 +165,9 @@ function handleClick(){
 					window.clearTimeout(test.timeout);
 					success();
 					nextPhase();
+					test.container.removeEventListener('touchstart', savePosition, false);
+					test.container.removeEventListener('touchend', verifyRightSwipe, false);
+					test.container.addEventListener('touchstart', startEvent, false);
 					test.container.onclick = handleClick;
 				break;
 			};
@@ -189,6 +199,9 @@ function updateLabels(){
 function error(){
 	test.container.classList.add('error');
 	test.container.classList.remove('waiting');
+	// var containerClone = test.container.cloneNode(true);
+	// test.container.replaceChild(containerClone, test.container);
+	// test.container.addEventListener('touchstart', startEvent, false);
 	test.set_status(3);
 	updateLabels();
 	document.body.onclick = handleClick;
@@ -233,7 +246,6 @@ function startTest(){
 
 function doubleTapFunc(evento){
 	mouse.increaseConsecutiveClicks();
-	console.log("doubleTapFunc event on x = "+evento.pageX+" and y = "+evento.pageY);
 	if (mouse.getConsecutiveClicks() == 1) {
 		setTimeout(function(){
 			if (mouse.getConsecutiveClicks() > 1) {
@@ -243,6 +255,7 @@ function doubleTapFunc(evento){
 			};
 		},500);
 	};
+	e.preventDefault();
 };
 
 function swipeHandler() {
@@ -252,4 +265,37 @@ function swipeHandler() {
 function testComplete() {
 	test.container.classList.remove('success');
 	updateLabels();
-}
+};
+
+function startEvent(e){
+	var touchobj = e.changedTouches[0];
+	e.preventDefault();
+	handleClick();
+	console.log("Single tap triggered");
+};
+
+function savePosition(e){
+	var touchobj = e.changedTouches[0];
+	mouse.initialX = touchobj.clientX;
+	mouse.initialY = touchobj.clientY;
+	e.preventDefault();
+};
+
+function verifyLeftSwipe(e){
+	var touchobj = e.changedTouches[0];
+	if ((touchobj.clientX - mouse.initialX)<-75) {
+		handleClick();
+	}else{
+		alert(touchobj.clientX - mouse.initialX);
+	};
+	e.preventDefault();
+};
+
+function verifyRightSwipe(e){
+	var touchobj = e.changedTouches[0];
+	if ((touchobj.clientX - mouse.initialX)>75) {
+		handleClick();
+	} else{
+		alert(touchobj.clientX - mouse.initialX);		
+	};
+};

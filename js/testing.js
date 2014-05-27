@@ -1,15 +1,19 @@
 window.onload = function(){
 	test.baseClass = document.body.className;
 	test.container = document.getElementsByClassName("ui-page")[0];
-	test.container.classList.add('uninitialized');
-	if( isMobile.any() ) {
-		test.container.addEventListener('touchstart', startEvent, false);
-		test.set_devise(isMobile.deviseName());
-		document.getElementById("equipment").innerHTML = test.get_devise();
-		test.isMobile = true;
-	}else{
-		document.body.onclick = handleClick;
-	};
+	if ( typeof test.container !== 'undefined') {
+		test.container.classList.add('uninitialized');
+		if( isMobile.any() ) {
+			test.container.addEventListener('touchstart', startEvent, false);
+			test.set_devise(isMobile.deviseName());
+			document.getElementById("equipment").innerHTML = test.get_devise();
+			document.getElementById("imei").innerHTML = getParameterByName("imei");;
+
+			test.isMobile = true;
+		}else{
+			document.body.onclick = handleClick;
+		};
+	}
 	document.body.style.width = screen.width;
 	document.body.style.height = screen.height;
 };
@@ -24,6 +28,7 @@ Number.method('integer', function ( ) {
 });
 
 var test = {
+	imei : 0,
 	status : 0,
 	phase : 0,
 	timeout : 0,
@@ -48,19 +53,29 @@ var test = {
 				number : 2
 			},
 			{
-				name : "slideLeft",
-				instruction : "Slide left",
+				name : "swipeLeft",
+				instruction : "Swipe left",
 				number : 3
 			},
 			{
-				name : "slideRight",
-				instruction : "Slide right",
+				name : "swipeRight",
+				instruction : "Swipe right",
 				number : 4
+			},
+			{
+				name : "swipeUp",
+				instruction : "Swipe Up",
+				number : 5
+			},
+			{
+				name : "swipeDown",
+				instruction : "Swipe Down",
+				number : 6
 			},
 			{
 				name : "testCompleted",
 				instruction : "All test passed",
-				number : 5
+				number : 7
 			}
 	],
 	set_status : function(status){
@@ -100,6 +115,12 @@ var test = {
 	},
 	get_devise : function(){
 		return this.devise;
+	},
+	set_IMEI : function(imei) {
+		this.imei = imei;
+	},
+	get_IMEI : function() {
+		return this.imei;
 	}
 };
 
@@ -165,10 +186,32 @@ function handleClick(){
 					window.clearTimeout(test.timeout);
 					success();
 					nextPhase();
-					test.container.removeEventListener('touchstart', savePosition, false);
 					test.container.removeEventListener('touchend', verifyRightSwipe, false);
+					test.container.addEventListener('touchend', verifySwipeUp, false);
+					// test.container.onclick = handleClick;
+				break;
+
+				case 5:
+					window.clearTimeout(test.timeout);
+					success();
+					nextPhase();
+					test.container.removeEventListener('touchend', verifySwipeUp, false);
+					test.container.addEventListener('touchend', verifySwipeDown, false);
+				break;
+
+				case 6:
+					window.clearTimeout(test.timeout);
+					success();
+					nextPhase();
+					test.container.removeEventListener('touchstart', savePosition, false);
+					test.container.removeEventListener('touchend', verifySwipeDown, false);
 					test.container.addEventListener('touchstart', startEvent, false);
-					test.container.onclick = handleClick;
+				break;
+
+				case 7:
+					window.clearTimeout(test.timeout);
+					clearListeners();
+					test.set_phase(0);
 				break;
 			};
 		}else{
@@ -199,11 +242,9 @@ function updateLabels(){
 function error(){
 	test.container.classList.add('error');
 	test.container.classList.remove('waiting');
-	// var containerClone = test.container.cloneNode(true);
-	// test.container.replaceChild(containerClone, test.container);
-	// test.container.addEventListener('touchstart', startEvent, false);
 	test.set_status(3);
 	updateLabels();
+	clearListeners();
 	document.body.onclick = handleClick;
 };
 
@@ -237,8 +278,10 @@ function nextPhase(){
 };
 
 function startTest(){
+	alert("startTest");
 	test.container.classList.add('uninitialized');
-	// document.getElementById("instructions").innerHTML = "Touch anywhere in the screen to start"
+	test.container.removeEventListener('touchstart', startTest, false);
+	test.container.addEventListener('touchstart', startEvent, false);
 	test.set_status(0);
 	test.set_phase(0);
 	updateLabels();
@@ -256,10 +299,6 @@ function doubleTapFunc(evento){
 		},500);
 	};
 	e.preventDefault();
-};
-
-function swipeHandler() {
-	handleClick();
 };
 
 function testComplete() {
@@ -286,7 +325,7 @@ function verifyLeftSwipe(e){
 	if ((touchobj.clientX - mouse.initialX)<-75) {
 		handleClick();
 	}else{
-		alert(touchobj.clientX - mouse.initialX);
+		console.log(touchobj.clientX - mouse.initialX);
 	};
 	e.preventDefault();
 };
@@ -296,6 +335,48 @@ function verifyRightSwipe(e){
 	if ((touchobj.clientX - mouse.initialX)>75) {
 		handleClick();
 	} else{
-		alert(touchobj.clientX - mouse.initialX);		
+		console.log(touchobj.clientX - mouse.initialX);		
 	};
 };
+function verifySwipeUp(e){
+	var touchobj = e.changedTouches[0];
+	if ((touchobj.clientY - mouse.initialY)<-75) {
+		handleClick();
+	} else{
+		alert(touchobj.clientY - mouse.initialY);		
+	};
+};
+function verifySwipeDown(e){
+	var touchobj = e.changedTouches[0];
+	if ((touchobj.clientY - mouse.initialY)>75) {
+		handleClick();
+	} else{
+		alert(touchobj.clientY - mouse.initialY);
+	};
+};
+
+function clearListeners(){
+	test.container.removeEventListener('touchstart', doubleTapFunc, false);
+	test.container.removeEventListener('touchstart', savePosition, false);
+	test.container.removeEventListener('touchend', verifyLeftSwipe, false);
+	test.container.removeEventListener('touchend', verifyRightSwipe, false);
+	test.container.removeEventListener('touchend', verifySwipeUp, false);
+	test.container.removeEventListener('touchend', verifySwipeDown, false);
+	test.container.addEventListener('touchstart', startTest, false);
+};
+
+function checkIMEI(){
+	var retrievedIMEI = document.getElementById("imei").value;
+	// alert(retrievedIMEI);
+	if (isNaN(parseInt(retrievedIMEI))) {
+		alert("IMEI is INVALID");
+	}else{
+		test.set_IMEI(retrievedIMEI);
+		window.location.href="test.html?imei="+retrievedIMEI;
+	};
+};
+
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}

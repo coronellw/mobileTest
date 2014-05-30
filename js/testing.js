@@ -40,42 +40,118 @@ var test = {
 			{
 				name : "uninitialized",
 				instruction : "( Click to start )",
-				number : 0
+				number : 0,
+				passed : false,
+				action : function (event) {
+					
+				}
 			},
 			{
 				name : "singleClick",
 				instruction : "Single tap",
-				number : 1
+				number : 1,
+				passed : false,
+				action : function (event) {
+
+				}
 			},
 			{
 				name : "doubleClick",
 				instruction : "Double tap",
-				number : 2
+				number : 2,
+				passed : false,
+				action : function (event) {}
 			},
 			{
 				name : "swipeLeft",
 				instruction : "Swipe left",
-				number : 3
+				number : 3,
+				passed : false,
+				action : function (event) {}
 			},
 			{
 				name : "swipeRight",
 				instruction : "Swipe right",
-				number : 4
+				number : 4,
+				passed : false,
+				action : function (event) {}
 			},
 			{
 				name : "swipeUp",
 				instruction : "Swipe Up",
-				number : 5
+				number : 5,
+				passed : false,
+				action : function (event) {}
 			},
 			{
 				name : "swipeDown",
 				instruction : "Swipe Down",
-				number : 6
+				number : 6,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "pitchIn",
+				instruction : "Pitch in",
+				number : 7,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "pitchOut",
+				instruction : "Pitch out",
+				number : 8,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelX+",
+				instruction : "Place phone as shown",
+				number : 9,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelX-",
+				instruction : "Place phone as shown",
+				number : 10,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelY+",
+				instruction : "Place phone as shown",
+				number : 11,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelY-",
+				instruction : "Place phone as shown",
+				number : 12,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelZ+",
+				instruction : "Place phone as shown",
+				number : 13,
+				passed : false,
+				action : function (event) {}
+			},
+			{
+				name : "accelZ-",
+				instruction : "Place phone as shown",
+				number : 14,
+				passed : false,
+				action : function (event) {}
 			},
 			{
 				name : "testCompleted",
 				instruction : "All test passed",
-				number : 7
+				number : 20,
+				passed : false,
+				action : function (event) {}
 			}
 	],
 	set_status : function(status){

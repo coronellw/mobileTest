@@ -1,18 +1,64 @@
 window.onload = function(){
-	test.baseClass = document.body.className;
 	test.container = document.getElementsByClassName("ui-page")[0];
+	test.container.addEventListener('touchstart', test.phases[1].action, false);
 	if ( typeof test.container !== 'undefined') {
 		test.container.classList.add('uninitialized');
 		if( isMobile.any() ) {
-			test.container.addEventListener('touchstart', startEvent, false);
+			
+			test.container.addEventListener('touchstart', savePosition, false);
+			test.container.addEventListener('touchstart', test.phases[1].action, false);
+			test.container.addEventListener('touchstart', test.phases[2].action, false);
+			test.container.addEventListener('touchend', test.phases[3].action, false);
+			test.container.addEventListener('touchend', test.phases[4].action, false);
+			test.container.addEventListener('touchend', test.phases[5].action, false);
+			test.container.addEventListener('touchend', test.phases[6].action, false);
+			test.container.addEventListener('touchend', saveEndingPosition, false);
+
+			test.container.addEventListener('touchmove', moving, false);
+
+			window.ondevicemotion = function(e) {
+				var aX = e.accelerationIncludingGravity.x;
+				document.getElementById("varx").innerHTML = aX.toFixed(4);
+				if (aX > 7) {
+					document.getElementById("xpos").classList.add("passed");
+					test.phases[9].passed = true;
+				} else {
+					if (aX < -7) {
+						document.getElementById("xneg").classList.add("passed");
+						test.phases[10].passed = true;
+					};
+				};
+				var aY = e.accelerationIncludingGravity.y;
+				document.getElementById("vary").innerHTML = aY.toFixed(4);
+				if (aY > 7) {
+					test.phases[11].passed = true;
+					document.getElementById("ypos").classList.add("passed");
+				} else {
+					if (aY < -7) {
+						test.phases[12].passed = true;
+						document.getElementById("yneg").classList.add("passed");
+					};
+				};
+				var aZ = e.accelerationIncludingGravity.z;
+				document.getElementById("varz").innerHTML = aZ.toFixed(4);
+				if (aZ > 7) {
+					test.phases[13].passed = true;
+					document.getElementById("zpos").classList.add("passed");
+				} else {
+					if (aZ < -7) {
+						test.phases[14].passed = true;
+						document.getElementById("zneg").classList.add("passed");
+					};
+				};
+			};
+
 			test.set_devise(isMobile.deviseName());
 			document.getElementById("equipment").innerHTML = test.get_devise();
-			document.getElementById("imei").innerHTML = getParameterByName("imei");;
+			document.getElementById("imei").innerHTML = getParameterByName("imei");
+			document.getElementById("status").innerHTML = "Running tests...";
 
 			test.isMobile = true;
-		}else{
-			document.body.onclick = handleClick;
-		};
+		}
 	}
 	document.body.style.width = screen.width;
 	document.body.style.height = screen.height;
@@ -26,6 +72,26 @@ Function.prototype.method = function(name, func){
 Number.method('integer', function ( ) {
 	return Math[this < 0 ? 'ceil' : 'floor'](this);
 });
+
+var mouse = {
+	consecutiveClicks : 0,
+	initialX : 0,
+	initialY : 0,
+	finalX : 0,
+	finalY : 0,
+	currentX : 'undefined',
+	currentY : 'undefined',
+	increaseConsecutiveClicks : function(){
+		this.consecutiveClicks+=1;
+		console.log("consecutiveClicks increased to " + this.consecutiveClicks);
+	},
+	getConsecutiveClicks : function(){
+		return this.consecutiveClicks;
+	},
+	resetConsecutiveClicks : function(){
+		this.consecutiveClicks = 0;
+	}
+};
 
 var test = {
 	imei : 0,
@@ -42,7 +108,7 @@ var test = {
 				instruction : "( Click to start )",
 				number : 0,
 				passed : false,
-				action : function (event) {
+				action : function (e) {
 					
 				}
 			},
@@ -51,8 +117,11 @@ var test = {
 				instruction : "Single tap",
 				number : 1,
 				passed : false,
-				action : function (event) {
-
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					this.passed = true;
+					document.getElementById("singlet").classList.add("passed");
+					e.preventDefault();
 				}
 			},
 			{
@@ -60,98 +129,133 @@ var test = {
 				instruction : "Double tap",
 				number : 2,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					mouse.increaseConsecutiveClicks();
+					if (mouse.getConsecutiveClicks() == 1) {
+						setTimeout(function(){
+							if (mouse.getConsecutiveClicks() > 1) {
+								this.passed = true;
+								document.getElementById("doublet").classList.add("passed");
+							};
+							mouse.resetConsecutiveClicks();
+						},500);
+					};
+					e.preventDefault();
+				}
 			},
 			{
 				name : "swipeLeft",
 				instruction : "Swipe left",
 				number : 3,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					if ((touchobj.clientX - mouse.initialX)<-75) {
+						this.passed = true;
+						document.getElementById("sleft").classList.add("passed");
+					}
+					e.preventDefault();
+				}
 			},
 			{
 				name : "swipeRight",
 				instruction : "Swipe right",
 				number : 4,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					if ((touchobj.clientX - mouse.initialX)>75) {
+						this.passed = true;
+						document.getElementById("sright").classList.add("passed");
+					}
+					e.preventDefault();
+				}
 			},
 			{
 				name : "swipeUp",
 				instruction : "Swipe Up",
 				number : 5,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					if ((touchobj.clientY - mouse.initialY)<-75) {
+						this.passed = true;
+						document.getElementById("sup").classList.add("passed");
+					}
+					e.preventDefault();
+				}
 			},
 			{
 				name : "swipeDown",
 				instruction : "Swipe Down",
 				number : 6,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {
+					var touchobj = e.changedTouches[0];
+					if ((touchobj.clientY - mouse.initialY)>75) {
+						this.passed = true;
+						document.getElementById("sdown").classList.add("passed");
+					}
+					e.preventDefault();
+				}
 			},
 			{
 				name : "pitchIn",
 				instruction : "Pitch in",
 				number : 7,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {}
 			},
 			{
 				name : "pitchOut",
 				instruction : "Pitch out",
 				number : 8,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {}
 			},
 			{
 				name : "accelX+",
 				instruction : "Place phone as shown",
 				number : 9,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "accelX-",
 				instruction : "Place phone as shown",
 				number : 10,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "accelY+",
 				instruction : "Place phone as shown",
 				number : 11,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "accelY-",
 				instruction : "Place phone as shown",
 				number : 12,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "accelZ+",
 				instruction : "Place phone as shown",
 				number : 13,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "accelZ-",
 				instruction : "Place phone as shown",
 				number : 14,
-				passed : false,
-				action : function (event) {}
+				passed : false
 			},
 			{
 				name : "testCompleted",
 				instruction : "All test passed",
 				number : 20,
 				passed : false,
-				action : function (event) {}
+				action : function (e) {}
 			}
 	],
 	set_status : function(status){
@@ -200,121 +304,6 @@ var test = {
 	}
 };
 
-var mouse = {
-	consecutiveClicks : 0,
-	initialX : 0,
-	initialY : 0,
-	lastX : 0,
-	lastY : 0,
-	increaseConsecutiveClicks : function(){
-		this.consecutiveClicks+=1;
-		console.log("consecutiveClicks increased to " + this.consecutiveClicks);
-	},
-	getConsecutiveClicks : function(){
-		return this.consecutiveClicks;
-	},
-	resetConsecutiveClicks : function(){
-		this.consecutiveClicks = 0;
-	}
-};
-
-function handleClick(){
-	if (test.get_status() === 0) {
-		test.set_phase(1);
-		waiting();
-	}else {
-		if (test.get_status() === 1) {
-			switch(test.get_phase()){
-				case 1:
-					window.clearTimeout(test.timeout);
-					success();
-					// document.body.ondblclick = handleClick;
-					nextPhase();
-					if( test.isMobile ) {
-						test.container.removeEventListener('touchstart',startEvent, false);
-						test.container.addEventListener('touchstart', doubleTapFunc, false);
-					}else{
-						document.body.onclick = doubleTapFunc;
-					};
-				break;
-
-				case 2:
-					window.clearTimeout(test.timeout);
-					success();
-					mouse.resetConsecutiveClicks();
-					test.container.onclick = null;
-					nextPhase();
-					test.container.removeEventListener('touchstart', doubleTapFunc, false);
-					test.container.addEventListener('touchstart', savePosition, false);
-					test.container.addEventListener('touchend', verifyLeftSwipe, false);
-				break;
-
-				case 3:
-					window.clearTimeout(test.timeout);
-					success();
-					nextPhase();
-					test.container.removeEventListener('touchend', verifyLeftSwipe, false);
-					test.container.addEventListener('touchend', verifyRightSwipe, false);
-					// test.container.onclick = handleClick;
-				break;
-
-				case 4:
-					window.clearTimeout(test.timeout);
-					success();
-					nextPhase();
-					test.container.removeEventListener('touchend', verifyRightSwipe, false);
-					test.container.addEventListener('touchend', verifySwipeUp, false);
-					// test.container.onclick = handleClick;
-				break;
-
-				case 5:
-					window.clearTimeout(test.timeout);
-					success();
-					nextPhase();
-					test.container.removeEventListener('touchend', verifySwipeUp, false);
-					test.container.addEventListener('touchend', verifySwipeDown, false);
-				break;
-
-				case 6:
-					window.clearTimeout(test.timeout);
-					success();
-					nextPhase();
-					test.container.removeEventListener('touchstart', savePosition, false);
-					test.container.removeEventListener('touchend', verifySwipeDown, false);
-					test.container.addEventListener('touchstart', startEvent, false);
-				break;
-
-				case 7:
-					window.clearTimeout(test.timeout);
-					clearListeners();
-					test.set_phase(0);
-				break;
-			};
-		}else{
-			if (test.get_status()===2) {
-				console.log("Please wait until the next test begins");
-			}else{
-				startTest();
-			}
-		}
-	}
-};
-
-function randomColorChange(){
-	var r = Math.random()*256;
-	var g = Math.random()*256;
-	var b = Math.random()*256;
-	document.body.style.backgroundColor = "#"+r.integer().toString(16)+b.integer().toString(16)+g.integer().toString(16);
-	// document.body.style.background = "rbg("+ r.integer() + ", " + b.integer() + ", " + g.integer() + ")";
-	console.log("Changed color to r:" + r.integer() + ", b: " + b.integer() + ", g: " + g.integer());
-};
-
-function updateLabels(){
-	document.getElementById("phase").innerHTML = test.get_phase();
-	document.getElementById("status").innerHTML = test.get_status_text();
-	document.getElementById("instructions").innerHTML = test.phases[test.get_phase()].instruction;
-}
-
 function error(){
 	test.container.classList.add('error');
 	test.container.classList.remove('waiting');
@@ -342,93 +331,35 @@ function waiting(time){
 	test.timeout = setTimeout(error, time);
 };
 
-function nextPhase(){
-	test.timeout = setTimeout(function(){
-		test.set_phase(test.get_phase()+1);
-		if (test.phases[test.get_phase()].name === "testCompleted") {
-			testComplete();
-		}else{
-			waiting();
-		};
-	}, 2000);
-};
-
-function startTest(){
-	alert("startTest");
-	test.container.classList.add('uninitialized');
-	test.container.removeEventListener('touchstart', startTest, false);
-	test.container.addEventListener('touchstart', startEvent, false);
-	test.set_status(0);
-	test.set_phase(0);
-	updateLabels();
-}
-
-function doubleTapFunc(evento){
-	mouse.increaseConsecutiveClicks();
-	if (mouse.getConsecutiveClicks() == 1) {
-		setTimeout(function(){
-			if (mouse.getConsecutiveClicks() > 1) {
-				handleClick();
-			} else {
-				mouse.resetConsecutiveClicks();
-			};
-		},500);
-	};
-	e.preventDefault();
-};
-
-function testComplete() {
-	test.container.classList.remove('success');
-	updateLabels();
-};
-
-function startEvent(e){
-	var touchobj = e.changedTouches[0];
-	e.preventDefault();
-	handleClick();
-	console.log("Single tap triggered");
-};
-
 function savePosition(e){
 	var touchobj = e.changedTouches[0];
 	mouse.initialX = touchobj.clientX;
 	mouse.initialY = touchobj.clientY;
+	document.getElementById("initialx").innerHTML = mouse.initialX;
+	document.getElementById("initialy").innerHTML = mouse.initialY;
 	e.preventDefault();
 };
 
-function verifyLeftSwipe(e){
+function moving(e) {
 	var touchobj = e.changedTouches[0];
-	if ((touchobj.clientX - mouse.initialX)<-75) {
-		handleClick();
-	}else{
-		console.log(touchobj.clientX - mouse.initialX);
-	};
+	mouse.currentX = touchobj.clientX;
+	mouse.currentY = touchobj.clientY;
+	document.getElementById("currentx").innerHTML = mouse.currentX;
+	document.getElementById("currenty").innerHTML = mouse.currentY;
 	e.preventDefault();
-};
+}
 
-function verifyRightSwipe(e){
+function saveEndingPosition(e){
 	var touchobj = e.changedTouches[0];
-	if ((touchobj.clientX - mouse.initialX)>75) {
-		handleClick();
-	} else{
-		console.log(touchobj.clientX - mouse.initialX);		
-	};
-};
-function verifySwipeUp(e){
-	var touchobj = e.changedTouches[0];
-	if ((touchobj.clientY - mouse.initialY)<-75) {
-		handleClick();
-	} else{
-		alert(touchobj.clientY - mouse.initialY);		
-	};
-};
-function verifySwipeDown(e){
-	var touchobj = e.changedTouches[0];
-	if ((touchobj.clientY - mouse.initialY)>75) {
-		handleClick();
-	} else{
-		alert(touchobj.clientY - mouse.initialY);
-	};
+	mouse.currentX = 'undefined';
+	mouse.currentY = 'undefined';
+	mouse.finalX = touchobj.clientX;
+	mouse.finalY = touchobj.clientY;
+	document.getElementById("currentx").innerHTML = mouse.currentX;
+	document.getElementById("currenty").innerHTML = mouse.currentY;
+	document.getElementById("finalx").innerHTML = mouse.finalX;
+	document.getElementById("finaly").innerHTML = mouse.finalY;
+	e.preventDefault();
 };
 
 function clearListeners(){

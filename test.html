@@ -8,22 +8,77 @@
 		<script type="text/javascript" src="js/jquery.js" ></script>
 		<script type="text/javascript" src="js/jquery.mobile.js" ></script>
 		<script type="text/javascript" src="js/checkDevise.js" ></script>
-		<script type="text/javascript" src="js/customMouseEvents.js" ></script>
 		<script type="text/javascript" src="js/testing.js"></script>
 	</head>
 	<body>
 		<br><br>
 		<center>
 			<h1>Testing app for <span id="equipment"></span></h1>
-			<h2>Phase: <span id="imei">0</span></h2>
-			<h2>Phase: <span id="phase">0</span></h2>
-			<h2>Status: <span id="status">0</span></h2>
-			<h3><b>Instructions :</b></h3>
+
+			<table id="mainTable">
+				<tr>
+					<td class="label">IMEI :</td>
+					<td id="imei" class="text">Uninitialized</td>
+				</tr>
+				<tr>
+					<td class="label">STATUS : </td>
+					<td id="status" class="text">Uninitialized</td>
+				</tr>
+			</table>
 		</center>
 
 		<div id="parent">
-			<span id="instructions">( Click to start )</span>
+			<!-- <span id="instructions">( Click to start )</span> -->
+			<div id="singlet" class="test">Singe tap</div>
+			<div id="doublet" class="test">Double tap</div>
+			<div id="sleft" class="test">Swipe left</div>
+			<div id="sright" class="test ">Swipe right</div>
+			<div id="sup" class="test">Swipe up</div>
+			<div id="sdown" class="test">Swipe down</div>
+			<div id="pin" class="test">Pitch in</div>
+			<div id="pout" class="test">Pitch out</div>
+			<div id="xpos" class="test">Accel. positive x</div>
+			<div id="xneg" class="test">Accel. negative x</div>
+			<div id="ypos" class="test">Accel. positive y</div>
+			<div id="yneg" class="test">Accel. negative y</div>
+			<div id="zpos" class="test">Accel. positive z</div>
+			<div id="zneg" class="test">Accel. negative z</div>
 		</div>
+
+		<footer>
+			<table id="debugger">
+				<tr> 
+					<td>X :</td>
+					<td id="varx">0</td>
+					<td></td>
+					<td >Y :</td>
+					<td id="vary">0</td>
+					<td></td>
+					<td >Z :</td>
+					<td id="varz">0</td>
+				</tr>
+				<tr>
+					<td >Initial x : </td>
+					<td id="initialx">0</td>
+					<td></td>
+					<td >Initial y : </td>
+					<td id="initialy">0</td>
+					<td></td>
+					<td >Final x : </td>
+					<td id="finalx">0</td>
+					<td></td>
+					<td>Final y :</td>
+					<td id="finaly">0</td>
+				</tr>
+				<tr>
+					<td>Current x : </td>
+					<td id="currentx">0</td>
+					<td></td>
+					<td>Current y : </td>
+					<td id="currenty">0</td>
+				</tr>
+			</table>
+		</footer>
 		
 	</body>
 </html>

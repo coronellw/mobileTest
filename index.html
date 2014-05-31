@@ -16,35 +16,6 @@
 				<br>
 				<button type="button" onclick="checkIMEI();" >Start testing</button>
 			</form>
-
-			<p> <b>X</b> : <span id="varx"></span> </p>
-			<p> <b>Y</b> : <span id="vary"></span> </p>
-			<p> <b>Z</b> : <span id="varz"></span> </p>
-			<script type="text/javascript">
-				window.ondevicemotion = function(evento){
-					var accelerationX = event.accelerationIncludingGravity.x;
-					var accelerationY = event.accelerationIncludingGravity.y;
-					var accelerationZ = event.accelerationIncludingGravity.z;
- 
-					if ((accelerationX > 5) || (accelerationX < -5)) {
-						// se activa cuando la posicion es perpendicular al piso en forma horizontal
-						// ( si x > 0 el dispositivo esta vertical al suelo con )
-						document.getElementById("varx").innerHTML = accelerationX;
-					};
-					
-					if ((accelerationY > 5) || (accelerationY < -5)) {
-						// se activa cuando la posicion es perpendicular al piso en forma vertical, 
-						// (si y > 0  el dispositivo esta con la cabeza arriba, si y < 0 esta con la cabeza abajo)
-						document.getElementById("vary").innerHTML = accelerationY;
-					};
-
-					if ((accelerationZ > 5) || (accelerationZ < -5)) {
-						// se activa cuando la posicion es paralela al piso 
-						// (acostado, si z > 0 el dispositivo esta con la pantalla hacia arriba, si z < 0 esta con la pantalla boca abajo)
-						document.getElementById("varz").innerHTML = accelerationZ;
-					};
-				};
-			</script>
 		</center>
 	</body>
 </html>

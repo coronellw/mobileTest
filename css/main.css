@@ -10,13 +10,18 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-	font-size: 4em;
+	/*font-size: 4em;*/
+}
+
+header {
+	text-align: center;
+	width: 20%;
 }
 
 footer {
 	border-top: 3px solid black;
 	bottom: 0;
-	font-size: 1.5em;
+	/*font-size: 1.5em;*/
 	font-weight: bold;
 	height: 10%;
 	padding: 5%;
@@ -66,7 +71,7 @@ th,td {
 #instructions {
 	border: 5px solid;
 	border-radius: 15px;
-	font-size: 4em;
+	/*font-size: 4em;*/
 	padding: 5px 20px;
 }
 
@@ -85,6 +90,7 @@ th,td {
 	height: 50px;
 	margin: 10px;
 	padding: 0 10px;
+	overflow-x: hidden;
 	width: 75px;
 }
 
@@ -102,11 +108,11 @@ th,td {
 
 .label {
 	font-family: serif;
-	font-size: 2.5em;
+	/*font-size: 2.5em;*/
 	font-weight: bold;
 }
 
 .text {
 	font-family: sans-serif;
-	font-size: 2.3em;
+	/*font-size: 2.3em;*/
 }

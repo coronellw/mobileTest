@@ -1,56 +1,69 @@
+var elapsedTime = 0, timeToCompleteTest = 0;
 window.onload = function(){
 	test.container = document.getElementsByClassName("ui-page")[0];
-	test.container.addEventListener('touchstart', test.phases[1].action, false);
+	timeToCompleteTest = eval_time;
+	elapsedTime = setTimeout(function(){
+		clearInterval(test.interval);
+		jQuery("#send_btn").click();
+		document.getElementById("timer").innerHTML = 0;
+	}, timeToCompleteTest);
+	elapsedTime = 1;
+	test.interval = setInterval(function(){
+		document.getElementById("timer").innerHTML = (timeToCompleteTest/1000) - elapsedTime;
+		elapsedTime++;
+	}, 1000);
+
 	if ( typeof test.container !== 'undefined') {
 		test.container.classList.add('uninitialized');
 		if( isMobile.any() ) {
 			
 			test.container.addEventListener('touchstart', savePosition, false);
-			test.container.addEventListener('touchstart', test.phases[1].action, false);
-			test.container.addEventListener('touchstart', test.phases[2].action, false);
-			test.container.addEventListener('touchend', test.phases[3].action, false);
-			test.container.addEventListener('touchend', test.phases[4].action, false);
-			test.container.addEventListener('touchend', test.phases[5].action, false);
-			test.container.addEventListener('touchend', test.phases[6].action, false);
 			test.container.addEventListener('touchend', saveEndingPosition, false);
-
 			test.container.addEventListener('touchmove', moving, false);
 
-			window.ondevicemotion = function(e) {
-				var aX = e.accelerationIncludingGravity.x;
-				document.getElementById("varx").innerHTML = aX.toFixed(4);
-				if (aX > 7) {
-					document.getElementById("xpos").classList.add("passed");
-					test.phases[9].passed = true;
-				} else {
-					if (aX < -7) {
-						document.getElementById("xneg").classList.add("passed");
-						test.phases[10].passed = true;
-					};
-				};
-				var aY = e.accelerationIncludingGravity.y;
-				document.getElementById("vary").innerHTML = aY.toFixed(4);
-				if (aY > 7) {
-					test.phases[11].passed = true;
-					document.getElementById("ypos").classList.add("passed");
-				} else {
-					if (aY < -7) {
-						test.phases[12].passed = true;
-						document.getElementById("yneg").classList.add("passed");
-					};
-				};
-				var aZ = e.accelerationIncludingGravity.z;
-				document.getElementById("varz").innerHTML = aZ.toFixed(4);
-				if (aZ > 7) {
-					test.phases[13].passed = true;
-					document.getElementById("zpos").classList.add("passed");
-				} else {
-					if (aZ < -7) {
-						test.phases[14].passed = true;
-						document.getElementById("zneg").classList.add("passed");
-					};
-				};
-			};
+			// test.container.addEventListener('touchstart', test.phases[1].action, false);
+			// test.container.addEventListener('touchstart', test.phases[2].action, false);
+			// test.container.addEventListener('touchend', test.phases[3].action, false);
+			// test.container.addEventListener('touchend', test.phases[4].action, false);
+			// test.container.addEventListener('touchend', test.phases[5].action, false);
+			// test.container.addEventListener('touchend', test.phases[6].action, false);
+
+
+			// window.ondevicemotion = function(e) {
+			// 	var aX = e.accelerationIncludingGravity.x;
+			// 	document.getElementById("varx").innerHTML = aX.toFixed(4);
+			// 	if (aX > 7) {
+			// 		document.getElementById("xpos").classList.add("passed");
+			// 		test.phases[9].passed = true;
+			// 	} else {
+			// 		if (aX < -7) {
+			// 			document.getElementById("xneg").classList.add("passed");
+			// 			test.phases[10].passed = true;
+			// 		};
+			// 	};
+			// 	var aY = e.accelerationIncludingGravity.y;
+			// 	document.getElementById("vary").innerHTML = aY.toFixed(4);
+			// 	if (aY > 7) {
+			// 		test.phases[11].passed = true;
+			// 		document.getElementById("ypos").classList.add("passed");
+			// 	} else {
+			// 		if (aY < -7) {
+			// 			test.phases[12].passed = true;
+			// 			document.getElementById("yneg").classList.add("passed");
+			// 		};
+			// 	};
+			// 	var aZ = e.accelerationIncludingGravity.z;
+			// 	document.getElementById("varz").innerHTML = aZ.toFixed(4);
+			// 	if (aZ > 7) {
+			// 		test.phases[13].passed = true;
+			// 		document.getElementById("zpos").classList.add("passed");
+			// 	} else {
+			// 		if (aZ < -7) {
+			// 			test.phases[14].passed = true;
+			// 			document.getElementById("zneg").classList.add("passed");
+			// 		};
+			// 	};
+			// };
 
 			test.set_devise(isMobile.deviseName());
 			document.getElementById("equipment").innerHTML = test.get_devise();
@@ -81,6 +94,28 @@ var mouse = {
 	finalY : 0,
 	currentX : 'undefined',
 	currentY : 'undefined',
+	active : false,
+	increaseConsecutiveClicks : function(){
+		this.consecutiveClicks+=1;
+		console.log("consecutiveClicks increased to " + this.consecutiveClicks);
+	},
+	getConsecutiveClicks : function(){
+		return this.consecutiveClicks;
+	},
+	resetConsecutiveClicks : function(){
+		this.consecutiveClicks = 0;
+	}
+};
+
+var touch2 = {
+	consecutiveClicks : 0,
+	initialX : 0,
+	initialY : 0,
+	finalX : 0,
+	finalY : 0,
+	currentX : 'undefined',
+	currentY : 'undefined',
+	active : false,
 	increaseConsecutiveClicks : function(){
 		this.consecutiveClicks+=1;
 		console.log("consecutiveClicks increased to " + this.consecutiveClicks);
@@ -98,6 +133,7 @@ var test = {
 	status : 0,
 	phase : 0,
 	timeout : 0,
+	interval : 0,
 	devise : 'undefined',
 	baseClass : 'uninit',
 	container :  'undefined',
@@ -342,6 +378,7 @@ function savePosition(e){
 
 function moving(e) {
 	var touchobj = e.changedTouches[0];
+	var touchobj2 = e.changedTouches[1];
 	mouse.currentX = touchobj.clientX;
 	mouse.currentY = touchobj.clientY;
 	document.getElementById("currentx").innerHTML = mouse.currentX;
@@ -355,35 +392,24 @@ function saveEndingPosition(e){
 	mouse.currentY = 'undefined';
 	mouse.finalX = touchobj.clientX;
 	mouse.finalY = touchobj.clientY;
-	document.getElementById("currentx").innerHTML = mouse.currentX;
-	document.getElementById("currenty").innerHTML = mouse.currentY;
 	document.getElementById("finalx").innerHTML = mouse.finalX;
 	document.getElementById("finaly").innerHTML = mouse.finalY;
 	e.preventDefault();
 };
 
-function clearListeners(){
-	test.container.removeEventListener('touchstart', doubleTapFunc, false);
-	test.container.removeEventListener('touchstart', savePosition, false);
-	test.container.removeEventListener('touchend', verifyLeftSwipe, false);
-	test.container.removeEventListener('touchend', verifyRightSwipe, false);
-	test.container.removeEventListener('touchend', verifySwipeUp, false);
-	test.container.removeEventListener('touchend', verifySwipeDown, false);
-	test.container.addEventListener('touchstart', startTest, false);
-};
-
 function checkIMEI(){
 	var retrievedIMEI = document.getElementById("imei").value;
+	var eval_type = document.getElementById("eval_type").value;
 	// alert(retrievedIMEI);
 	if (isNaN(parseInt(retrievedIMEI))) {
 		alert("IMEI is INVALID");
 	}else{
 		test.set_IMEI(retrievedIMEI);
-		window.location.href="test.html?imei="+retrievedIMEI;
+		window.location.href="test.php?imei="+retrievedIMEI+"&eval_type="+eval_type;
 	};
 };
 
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-}
+};

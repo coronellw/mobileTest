@@ -21,7 +21,7 @@ window.onload = function(){
 
 		if (pruebas && pruebas !== 'undefined' ) {
 			for (var i = 0; i < pruebas.length; i++) {
-				pruebas[i].funcion();
+				// pruebas[i].funcion();
 			};
 		};
 		if( isMobile.any() ) {

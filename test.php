@@ -34,7 +34,6 @@
 				// prepare query to retrieve all the tests related to the evaluation selected
 				$query_tests = "SELECT t.name, t.tag, t.action, t.description, t.id_test FROM evaluation_test et, tests t WHERE et.id_test = t.id_test AND  et.id_evaluation = ".$eval_type;
 				$tests = $link->query($query_tests);
-				$tests_array = array();
 			?>
 			<center>
 				<header>
@@ -71,19 +70,28 @@
 	
 			<div id="parent">
 				<?php 
+					$tests_array = array();
+					$tests_array2 = array();
 					while($row = mysqli_fetch_array($tests)){
 						// prints the div that will store the tag
 						echo "<div id='".$row["tag"]."' class='test' >".$row["name"]."</div>";
 						// sets the timer of the test
 						$tests_array[] = $row;
+						$tests_array2[$row["tag"]][] = $row;
 					}
 				 ?>
 				<script type="text/javascript">
 					var pruebas = <?php echo json_encode($tests_array); ?>;
+					var pruebas2 = <?php echo json_encode($tests_array2); ?>;
 					var eval_time = <?php echo $eval_time ?>*1000;
 
+					// console.dir(pruebas2);
+					for (var objeto in pruebas2) {
+						console.log(pruebas2[objeto][0].name + " has description : "+ pruebas2[objeto][0].description);
+					};
+
 					for (var i = 0; i < pruebas.length; i++) {
-						prueba = pruebas[i];
+						var prueba = pruebas[i];
 						that = this;
 
 					 	prueba.funcion = function (prueba){

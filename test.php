@@ -19,7 +19,7 @@
 				$link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
 				
 				// inserting the new IMEI into the database
-				$query = "INSERT INTO devices(imei) VALUES ('".$imei."');";
+				$query = "INSERT INTO devices(imei, last_use) VALUES ('".$imei."',NOW()) ON DUPLICATE KEY UPDATE last_use = NOW();";
 				if (!mysqli_query($link, $query)) {
 					die("Error: ".mysqli_error($link));
 				}
@@ -32,14 +32,14 @@
 				$result = $link->query($query);
 	
 				// prepare query to retrieve all the tests related to the evaluation selected
-				$query_tests = "SELECT t.name, t.tag, t.action, t.description FROM evaluation_test et, tests t WHERE et.id_test = t.id_test AND  et.id_evaluation = ".$eval_type;
+				$query_tests = "SELECT t.name, t.tag, t.action, t.description, t.id_test FROM evaluation_test et, tests t WHERE et.id_test = t.id_test AND  et.id_evaluation = ".$eval_type;
 				$tests = $link->query($query_tests);
 				$tests_array = array();
 			?>
 			<center>
 				<header>
 					<button>Reset</button>
-					<button id="send_btn" onclick="alert('enviando prueba');" >Enviar prueba</button>
+					<button id="send_btn" onclick="send_results();" >Enviar prueba</button>
 				</header>
 			</center>
 			
@@ -74,22 +74,25 @@
 					while($row = mysqli_fetch_array($tests)){
 						// prints the div that will store the tag
 						echo "<div id='".$row["tag"]."' class='test' >".$row["name"]."</div>";
+						// sets the timer of the test
 						$tests_array[] = $row;
 					}
 				 ?>
-	
-				 <script type="text/javascript">
-				 	var arreglo = <?php echo json_encode($tests_array); ?>;
-				 	var eval_time = <?php echo $eval_time ?>*1000;
-				 	for (var i = 0; i < arreglo.length; i++) {
-				 		console.log(arreglo[i].action);
-				 	};
-			 		var funcion = eval(arreglo[0].action);
-			 		console.log(funcion);
-			 		console.log(test.phases[1].action);
-			 		funcion();
+				<script type="text/javascript">
+					var pruebas = <?php echo json_encode($tests_array); ?>;
+					var eval_time = <?php echo $eval_time ?>*1000;
 
-				 </script>
+					for (var i = 0; i < pruebas.length; i++) {
+						prueba = pruebas[i];
+						that = this;
+
+					 	prueba.funcion = function (prueba){
+							return function() {
+								console.log("{\nid_test: " + prueba.id_test + ",\nname : " + prueba.name + ",\ndescription : "+prueba.description+",\naction : " + prueba.action + "\ntag : " + prueba.tag + "\n};");
+							};
+						}(prueba);
+					};
+				</script>
 			</div>
 	
 			<footer style="display: none;">

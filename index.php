@@ -2,7 +2,9 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+                <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 		<title>Mobile testing app</title>
+                <link rel="stylesheet" href="css/main.css" type="text/css" />
 		<script type="text/javascript" src="js/checkDevise.js" ></script>
 		<script type="text/javascript" src="js/customMouseEvents.js" ></script>
 		<script type="text/javascript" src="js/testing.js"></script>

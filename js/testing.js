@@ -201,11 +201,16 @@ function getParameterByName(name) {
 function send_results() {
     var resultados = [];
     var eval_status = 3; // 3 means that the test was not performed at all
+    var arr_to_send = new Array();
     for (var index in pruebas) {
         var prueba = pruebas[index];
         if (prueba.passed) {
             resultados.push(prueba.name);
         }
+        if (!prueba.passed) {
+            prueba.passed = false;
+        }
+        arr_to_send[prueba.id_test] = prueba.passed;
     }
     if (resultados.length === pruebas.length) {
         alert("all test passed!!!");
@@ -223,9 +228,10 @@ function send_results() {
     jQuery.ajax({
         type:"POST",
         url:"save.php",
-        data: {"timestamp":timestamp, "pruebas":pruebas, "device" : id_device, "eval_type" : id_evaluation, "eval_status" : eval_status}
-    }).fail(alert("failed"));
+        data: {"timestamp":timestamp, "pruebas": arr_to_send, "device" : id_device, "eval_type" : id_evaluation, "eval_status" : eval_status}
+    });
     console.log("sending this:\ntimestamp:"+timestamp+"\ndevice:"+id_device+"\nid_evaluation:"+id_evaluation+"\neval status:"+ eval_status);
+    console.dir(pruebas);
 }
 
 function reset() {

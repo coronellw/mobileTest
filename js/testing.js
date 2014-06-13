@@ -222,11 +222,10 @@ function send_results() {
         }
     }
     
-    var timestamp = Date.now();
     jQuery.ajax({
         type:"POST",
         url:"save.php",
-        data: {"timestamp":timestamp, "pruebas": pruebas, "device" : id_device, "eval_type" : id_evaluation, "eval_status" : eval_status}
+        data: {"pruebas": pruebas, "device" : id_device, "eval_type" : id_evaluation, "eval_status" : eval_status}
     });
     console.log("sending this:\ntimestamp:"+timestamp+"\ndevice:"+id_device+"\nid_evaluation:"+id_evaluation+"\neval status:"+ eval_status);
     console.dir(pruebas);

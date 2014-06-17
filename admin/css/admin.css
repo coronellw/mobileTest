@@ -39,7 +39,23 @@ table {
     border: 1px solid black;
     border-collapse: collapse;
 }
-td, th {
+td, th, thead tr th, tbody tr td {
     border: 1px solid black;
+    padding: 0 10px;
+}
+
+thead tr th {
+    background-color: #428BCA;
+    color: #efe;
+    text-align: center;
+}
+
+table.stylish {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+table.stylish td, table.stylish th {
+    border: 1px solid;
+    border-color: transparent;
     padding: 0 10px;
 }

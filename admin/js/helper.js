@@ -6,13 +6,27 @@
 
 
 function getEvaluationDetail(fecha, id_device) {
-    console.log("About to send ajax request");
     jQuery.ajax({
         type: "POST",
-        url: "../requests/getTests.php",
+        url: "/mobile/admin/requests/getTests.php",
         data: {"fecha": fecha, "id_device": id_device}
     }).done(function(data) {
         document.getElementById("tbody").innerHTML = data;
+    }).fail(function(data){
+        document.getElementById("tbody").innerHTML = "There was an error while retrieving the associated test " + data;
     });
-    console.log("Ajax request was sent");
+}
+
+function deleteDevice(id_device) {
+    console.log("Preparing to delete  device...");
+    jQuery.ajax({
+        type: "POST",
+        url: "/mobile/admin/requests/deleteDevice.php",
+        data: {"id_device": id_device}
+    }).done(function(data) {
+        window.location.href = "/mobile/admin/";
+        console.log(id_device + " was deleted from the database");
+    }).fail(function(data) {
+        console.log("There was an error while deleting the element");
+    });
 }

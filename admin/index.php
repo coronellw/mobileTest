@@ -1,23 +1,15 @@
 <html>
     <head>
-        <meta charset="UTF-8">
         <?php
-//            include '../template/_head.php'; 
-            include '../db_info.php';
+        include '../template/_head.php';
+        include '../db_info.php';
         ?>
-        <style>
-            table {
-                border: 1px solid black;
-                border-collapse: collapse;
-            }
-            td, th {
-                border: 1px solid black;
-                padding: 0 10px;
-            }
-        </style>
+        <link href="/mobile/admin/css/admin.css" rel="stylesheet" type="text/css" >
+        <script src="/mobile/admin/js/helper.js"></script>
     </head>
 
     <body>
+    <center>
         <table>
             <thead>
                 <tr>
@@ -27,12 +19,13 @@
                 </tr>
             </thead>
             <tbody>
-                <h1>General list of current devices</h1>
-                <?php
-                  $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
-                  $query = "SELECT d.imei as imei, d.last_use as last_use FROM devices d ORDER BY d.last_use DESC";
-                  $result = $link->query($query);
-                  while($row = mysqli_fetch_array($result)){
+            <h1>General list of current devices</h1>
+            <h2>Choose an option to get more details about the devices</h2>
+            <?php
+            $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
+            $query = "SELECT d.id_device ,d.imei as imei, d.last_use as last_use FROM devices d ORDER BY d.last_use DESC";
+            $result = $link->query($query);
+            while ($row = mysqli_fetch_array($result)) {
                 ?>
                 <tr>
                     <td>
@@ -44,13 +37,24 @@
                     <td>
                         <a href="/mobile/admin/devices/view.php?imei=<?php echo $row["imei"]; ?>">View</a>
                         <a href="/mobile/admin/devices/edit.php?imei=<?php echo $row["imei"]; ?>">Edit</a>
-                        <a href="#delete=<?php echo $row["imei"]; ?>">Delete</a>
+                        <a href="#" onclick="if (confirm('Are you sure you want to delete this device?')) {
+                                        deleteDevice(<?php echo $row["id_device"]; ?>);
+                                    }" >Delete</a>
                     </td>
                 </tr>
-            <?php
-              }
+                <?php
+            }
             ?>
             </tbody>
         </table>
-    </body>
+        <span class='row'>
+            <span class='col-xs-6'>
+                <a href="evaluations/">Evaluations</a>
+            </span>
+            <span class='col-xs-6'>
+                <a href="tests/">Tests</a>
+            </span>
+        </span>
+    </center>
+</body>
 </html>

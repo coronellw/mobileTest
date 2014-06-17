@@ -1,0 +1,45 @@
+ol li {
+    padding: 5px 0;
+}
+
+.passed {
+    background: #4f7;
+    border: 3px solid #393;
+    color: #000;
+}
+
+.failed {
+    background: #f22;
+    border: 3px solid #933;
+    color: #FFF;
+}
+
+.passed, .failed {
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 0px 15px;
+}
+
+a.passed, a.failed, a.passed:visited, a.failed:visited{
+    color: #FFF;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+a.passed:hover, a.failed:hover {
+    color: #33f;
+}
+
+.evaluation {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td, th {
+    border: 1px solid black;
+    padding: 0 10px;
+}

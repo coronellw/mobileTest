@@ -75,7 +75,6 @@
             <div id="parent">
                 <?php
                 $tests_array = array();
-                $tests_array2 = array();
                 while ($row = mysqli_fetch_array($tests)) {
                     // prints the div that will store the tag
                     echo "<div id='" . $row["tag"] . "' class='test' >" . $row["name"] . "</div>";

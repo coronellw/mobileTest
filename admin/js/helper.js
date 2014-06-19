@@ -12,7 +12,7 @@ function getEvaluationDetail(fecha, id_device) {
         data: {"fecha": fecha, "id_device": id_device}
     }).done(function(data) {
         document.getElementById("tbody").innerHTML = data;
-    }).fail(function(data){
+    }).fail(function(data) {
         document.getElementById("tbody").innerHTML = "There was an error while retrieving the associated test " + data;
     });
 }
@@ -28,5 +28,21 @@ function deleteDevice(id_device) {
         console.log(id_device + " was deleted from the database");
     }).fail(function(data) {
         console.log("There was an error while deleting the element");
+    });
+}
+
+function createNewTest(name, action, description, tag) {
+    console.log("Preparing to create a new test...");
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/createTest.php",
+        data: {"name": name, "action": action, "description": description, "tag": tag}
+    }).done(function(data) {
+        console.log("No error was detected recieved "+data);
+        if (!confirm('Click accept to create another test')) {
+//            window.location.href = "/mobile/admin/tests/";
+        }
+    }).fail(function(data){
+        console.log("There was an error while creating this test, please check the logs "+data);
     });
 }

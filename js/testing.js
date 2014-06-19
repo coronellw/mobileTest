@@ -8,6 +8,7 @@ window.onload = function() {
         timeToCompleteTest = (typeof eval_time === 'number') ? eval_time : 10000;
 
         test.globalTimeout = setTimeout(function() {
+            console.log("Time is up, data will be sent");
             clearInterval(test.interval);
             jQuery("#send_btn").click();
             document.getElementById("timer").innerHTML = 0;
@@ -188,15 +189,25 @@ function send_results() {
             prueba.passed = false;
         }
     }
+    
     if (resultados.length === pruebas.length) {
         console.log("all test passed!!!");
         eval_status = 1; // 1 means all test were passed
+        test.container.classList.remove("error");
+        test.container.classList.remove("waiting");
+        test.container.classList.add("success");
     } else {
         if (resultados.length === 0) {
             console.log("You haven't complete any test");
+            test.container.classList.remove("success");
+            test.container.classList.remove("waiting");
+            test.container.classList.add("error");
         } else {
             console.log("Passed : " + resultados.length + "\nFailed : " + (pruebas.length - resultados.length) + "\nTotal : " + pruebas.length);
             eval_status = 2; //2 means some test passed but not all of them
+            test.container.classList.remove("success");
+            test.container.classList.remove("error");
+            test.container.classList.add("waiting");
         }
     }
 
@@ -204,9 +215,11 @@ function send_results() {
         type: "POST",
         url: "save.php",
         data: {"pruebas": pruebas, "device": id_device, "eval_type": id_evaluation, "eval_status": eval_status}
+    }).done(function(){
+        console.log("The test data was sent successfully");
+    }).fail(function(){
+        console.log("There was an error while sending the results to the database");
     });
-    console.log("sending this:\ntimestamp:" + timestamp + "\ndevice:" + id_device + "\nid_evaluation:" + id_evaluation + "\neval status:" + eval_status);
-    console.dir(pruebas);
 }
 
 function reset() {
@@ -225,6 +238,9 @@ function reset() {
         document.getElementById("timer").innerHTML = 0;
     }, timeToCompleteTest);
 
+    test.container.classList.remove("success");
+    test.container.classList.remove("error");
+    test.container.classList.add("waiting");
     elapsedTime = 1;
     test.interval = setInterval(function() {
         document.getElementById("timer").innerHTML = (timeToCompleteTest / 1000) - elapsedTime;

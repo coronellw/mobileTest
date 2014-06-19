@@ -59,3 +59,36 @@ table.stylish td, table.stylish th {
     border-color: transparent;
     padding: 3px 10px;
 }
+
+td.singleResult {
+    padding: 0px;
+}
+
+.singleResult.passed {
+    color: #0A0;
+}
+
+.singleResult.failed {
+    color: #f00;
+}
+
+.singleResult.passed, .singleResult.failed {
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 0;    
+    margin: 3px;
+    font: 0.8em normal;
+    padding: 0px 5px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+#evaluations{
+    table-layout: fixed;
+    width: 1000px;
+}
+
+table#evaluations thead tr th, table#evaluations tbody tr td {
+    overflow-x: hidden;
+    width: 50px;
+} 

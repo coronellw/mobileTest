@@ -35,19 +35,19 @@ form {
 }
 
 .error {
-	background: #f00;
+	background: #f00 !important;
 	border: 1px solid white;
 	color: white;
 }
 
 .waiting {
-	background: #ff0;
+	background: #ff0 !important;
 	border: 1px solid black;
 	color: black;
 }
 
 .success {
-	background: #0f0;
+	background: #0f0 !important;
 	border: 1px solid white;
 	color: white;
 }

@@ -41,7 +41,7 @@ table {
 }
 td, th, thead tr th, tbody tr td {
     border: 1px solid black;
-    padding: 0 10px;
+    padding: 2px 10px;
 }
 
 thead tr th {
@@ -57,5 +57,5 @@ table.stylish {
 table.stylish td, table.stylish th {
     border: 1px solid;
     border-color: transparent;
-    padding: 0 10px;
+    padding: 3px 10px;
 }

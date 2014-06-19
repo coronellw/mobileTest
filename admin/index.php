@@ -54,6 +54,9 @@
             <span class='col-xs-6'>
                 <a href="tests/">Tests</a>
             </span>
+            <span class="col-xs-12">
+                <a href="events/">Supported events</a>
+            </span>
         </span>
     </center>
 </body>

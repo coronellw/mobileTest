@@ -24,7 +24,7 @@ window.onload = function() {
             for (var index in pruebas) {
                 var prueba = pruebas[index];
                 if (prueba.action !== 'default') {
-                    Hammer(test.container).on(prueba.action, function(prueba) {
+                    Hammer(test.container, {doubleTapInterval: 700, preventDefault: true}).on(prueba.action, function(prueba) {
                         return function() {
                             document.getElementById(prueba.tag).classList.add("passed");
                             prueba.passed = true;
@@ -113,27 +113,6 @@ var mouse = {
     }
 };
 
-var touch2 = {
-    consecutiveClicks: 0,
-    initialX: 0,
-    initialY: 0,
-    finalX: 0,
-    finalY: 0,
-    currentX: 'undefined',
-    currentY: 'undefined',
-    active: false,
-    increaseConsecutiveClicks: function() {
-        this.consecutiveClicks += 1;
-        console.log("consecutiveClicks increased to " + this.consecutiveClicks);
-    },
-    getConsecutiveClicks: function() {
-        return this.consecutiveClicks;
-    },
-    resetConsecutiveClicks: function() {
-        this.consecutiveClicks = 0;
-    }
-};
-
 var test = {
     imei: 0,
     status: 0,
@@ -154,8 +133,7 @@ function savePosition(e) {
     document.getElementById("initialx").innerHTML = mouse.initialX;
     document.getElementById("initialy").innerHTML = mouse.initialY;
     e.preventDefault();
-}
-;
+};
 
 function moving(e) {
     var touchobj = e.changedTouches[0];
@@ -181,7 +159,7 @@ function saveEndingPosition(e) {
 function checkIMEI() {
     var retrievedIMEI = document.getElementById("imei").value;
     var eval_type = document.getElementById("eval_type").value;
-    // alert(retrievedIMEI);
+
     if (isNaN(parseInt(retrievedIMEI))) {
         alert("IMEI is INVALID");
     } else {
@@ -201,33 +179,33 @@ function getParameterByName(name) {
 function send_results() {
     var resultados = [];
     var eval_status = 3; // 3 means that the test was not performed at all
-    
+
     for (var index in pruebas) {
         var prueba = pruebas[index];
         if (prueba.passed) {
             resultados.push(prueba.name);
-        }else{
+        } else {
             prueba.passed = false;
         }
     }
     if (resultados.length === pruebas.length) {
-        alert("all test passed!!!");
+        console.log("all test passed!!!");
         eval_status = 1; // 1 means all test were passed
-    }else{
+    } else {
         if (resultados.length === 0) {
-            alert("You haven't complete any test");
-        }else{
-            alert("Passed : "+resultados.length+"\nFailed : "+(pruebas.length - resultados.length)+"\nTotal : "+pruebas.length);
+            console.log("You haven't complete any test");
+        } else {
+            console.log("Passed : " + resultados.length + "\nFailed : " + (pruebas.length - resultados.length) + "\nTotal : " + pruebas.length);
             eval_status = 2; //2 means some test passed but not all of them
         }
     }
-    
+
     jQuery.ajax({
-        type:"POST",
-        url:"save.php",
-        data: {"pruebas": pruebas, "device" : id_device, "eval_type" : id_evaluation, "eval_status" : eval_status}
+        type: "POST",
+        url: "save.php",
+        data: {"pruebas": pruebas, "device": id_device, "eval_type": id_evaluation, "eval_status": eval_status}
     });
-    console.log("sending this:\ntimestamp:"+timestamp+"\ndevice:"+id_device+"\nid_evaluation:"+id_evaluation+"\neval status:"+ eval_status);
+    console.log("sending this:\ntimestamp:" + timestamp + "\ndevice:" + id_device + "\nid_evaluation:" + id_evaluation + "\neval status:" + eval_status);
     console.dir(pruebas);
 }
 
@@ -237,7 +215,7 @@ function reset() {
         document.getElementById(prueba.tag).classList.remove("passed");
         prueba.passed = false;
     }
-    
+
     window.clearInterval(test.interval);
     window.clearTimeout(test.globalTimeout);
 
@@ -247,9 +225,45 @@ function reset() {
         document.getElementById("timer").innerHTML = 0;
     }, timeToCompleteTest);
 
-    elapsedTime=1;
+    elapsedTime = 1;
     test.interval = setInterval(function() {
         document.getElementById("timer").innerHTML = (timeToCompleteTest / 1000) - elapsedTime;
         elapsedTime++;
     }, 1000);
+}
+
+function updateModels() {
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/getModels.php",
+        data: {"id_brand": document.getElementById("brand").value}
+    }).done(function(data) {
+        document.getElementById("model").innerHTML = data;
+    }).fail(function(data) {
+        alert("Unable to load " + data);
+    });
+}
+
+function searchDevice() {
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/getDevice.php",
+        data: {"imei": document.getElementById("imei").value}
+    }).done(function(data) {
+        if (data !== 'null') {
+            var datos = JSON.parse(data);
+
+            document.getElementById("brand").value = datos.id_brand;
+            jQuery.ajax(updateModels()).done(function() {
+                jQuery("#model").val(datos.id_model);
+            });
+
+            console.log("Found that imei with brand " + datos["id_brand"] + " while model is " + datos["id_model"]);
+//            document.getElementById("model").value = datos.id_model;
+        } else {
+            document.getElementById("brand").value = null;
+            updateModels();
+            console.log("IMEI not found");
+        }
+    });
 }

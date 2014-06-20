@@ -31,18 +31,20 @@ function deleteDevice(id_device) {
     });
 }
 
-function createNewTest(name, action, description, tag) {
+function createNewTest(name, action, description, tag, evaluation) {
     console.log("Preparing to create a new test...");
+    console.log("name:" + name + "\naction:" + action + "\ndescription:" + description + "\ntag:" + tag);
+    evaluation = typeof evaluation === 'number' ? evaluation : null;
     jQuery.ajax({
         type: "GET",
         url: "/mobile/admin/requests/createTest.php",
-        data: {"name": name, "action": action, "description": description, "tag": tag}
+        data: {"name": name, "action": action, "description": description, "tag": tag, "evaluation": evaluation}
     }).done(function(data) {
-        console.log("No error was detected recieved "+data);
+        console.log("No error was detected recieved " + data);
         if (!confirm('Click accept to create another test')) {
 //            window.location.href = "/mobile/admin/tests/";
         }
-    }).fail(function(data){
-        console.log("There was an error while creating this test, please check the logs "+data);
+    }).fail(function(data) {
+        console.log("There was an error while creating this test, please check the logs " + data);
     });
 }

@@ -81,7 +81,8 @@
                                     document.getElementById('name').value, 
                                     document.getElementById('action').value, 
                                     document.getElementById('description').value, 
-                                    document.getElementById('tag').value
+                                    document.getElementById('tag').value,
+                                    document.getElementById('evaluation').value
                                     );" type="button" class="btn btn-primary" >
                             Create new test
                         </button>

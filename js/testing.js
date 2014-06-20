@@ -25,7 +25,7 @@ window.onload = function() {
             for (var index in pruebas) {
                 var prueba = pruebas[index];
                 if (prueba.action !== 'default') {
-                    Hammer(test.container, {doubleTapInterval: 700, preventDefault: true}).on(prueba.action, function(prueba) {
+                    Hammer(test.container, {doubleTapInterval: 700 }).on(prueba.action, function(prueba) {
                         return function() {
                             document.getElementById(prueba.tag).classList.add("passed");
                             prueba.passed = true;

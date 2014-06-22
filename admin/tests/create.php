@@ -52,7 +52,7 @@
                                 <select required="false" id="evaluation">
                                     <option value="null">---</option>
                                     <?php while ($evaluation = mysqli_fetch_array($evaluations)) { ?>
-                                        <option value="<?php echo $evaluation["id_event"]; ?>" >
+                                        <option value="<?php echo $evaluation['id_evaluation']; ?>" >
                                             <?php echo $evaluation["name"]; ?>
                                         </option>
                                     <?php } ?>

@@ -25,7 +25,7 @@ window.onload = function() {
             for (var index in pruebas) {
                 var prueba = pruebas[index];
                 if (prueba.action !== 'default') {
-                    Hammer(test.container, {doubleTapInterval: 700 }).on(prueba.action, function(prueba) {
+                    Hammer(test.container, {doubleTapInterval: 700}).on(prueba.action, function(prueba) {
                         return function() {
                             document.getElementById(prueba.tag).classList.add("passed");
                             prueba.passed = true;
@@ -134,7 +134,8 @@ function savePosition(e) {
     document.getElementById("initialx").innerHTML = mouse.initialX;
     document.getElementById("initialy").innerHTML = mouse.initialY;
     e.preventDefault();
-};
+}
+;
 
 function moving(e) {
     var touchobj = e.changedTouches[0];
@@ -189,7 +190,7 @@ function send_results() {
             prueba.passed = false;
         }
     }
-    
+
     if (resultados.length === pruebas.length) {
         console.log("all test passed!!!");
         eval_status = 1; // 1 means all test were passed
@@ -215,9 +216,9 @@ function send_results() {
         type: "POST",
         url: "save.php",
         data: {"pruebas": pruebas, "device": id_device, "eval_type": id_evaluation, "eval_status": eval_status}
-    }).done(function(){
+    }).done(function() {
         console.log("The test data was sent successfully");
-    }).fail(function(){
+    }).fail(function() {
         console.log("There was an error while sending the results to the database");
     });
 }
@@ -248,11 +249,12 @@ function reset() {
     }, 1000);
 }
 
-function updateModels() {
+function updateModels(id_model) {
+    id_model = typeof id_model !== 'undefined' ? id_model : null;
     jQuery.ajax({
         type: "GET",
         url: "/mobile/admin/requests/getModels.php",
-        data: {"id_brand": document.getElementById("brand").value}
+        data: {"id_brand": document.getElementById("brand").value, "id_model": id_model}
     }).done(function(data) {
         document.getElementById("model").innerHTML = data;
     }).fail(function(data) {

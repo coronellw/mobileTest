@@ -3,7 +3,6 @@
 include 'db_info.php';
 $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
 $id_device = filter_input(INPUT_POST, "device");
-//$timestamp = filter_input(INPUT_POST, "timestamp");
 $eval_type = filter_input(INPUT_POST, "eval_type");
 $eval_status = filter_input(INPUT_POST, "eval_status");
 $pruebas = filter_input(INPUT_POST, "pruebas", FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);

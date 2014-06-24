@@ -16,7 +16,7 @@
 
             $imei = filter_input(INPUT_GET, "imei");
 
-            $device = "SELECT d.id_device, d.imei, d.last_use FROM devices d WHERE d.imei = " . $imei . " ORDER BY d.last_use DESC LIMIT 20";
+            $device = "SELECT d.*, b.id_brand, b.name as brand_name, m.id_model, m.name as model_name FROM devices d left outer join brands b on d.id_brand = b.id_brand left outer join models m on d.id_model = m.id_model WHERE d.imei = " . $imei . " ORDER BY d.last_use DESC LIMIT 20;" or die("Error " . mysqli_error($link));
             $device_result = $link->query($device);
             $row_dev = mysqli_fetch_array($device_result);
 
@@ -35,6 +35,29 @@
                 <h1>Viewing device with imei : <?php echo $imei; ?></h1>
                 <h2>Test performed</h2>
                 <a href="/mobile/admin/" >Back to index</a>
+                <br>
+                <table class="stylish">
+                    <?php if ($row_dev['id_brand'] !== null) { ?>
+                        <tr>
+                            <td>
+                                <label>Brand:</label>
+                            </td>
+                            <td>
+                                <?php echo $row_dev['brand_name'] ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                    <?php if ($row_dev['id_model'] !== null) { ?>
+                        <tr>
+                            <td>
+                                <label>Model:</label>
+                            </td>
+                            <td>
+                                <?php echo $row_dev['model_name'] ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
                 <table>
                     <thead>
                         <tr>

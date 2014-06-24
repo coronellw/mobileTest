@@ -48,14 +48,14 @@
             </tbody>
         </table>
         <span class='row'>
-            <span class='col-xs-6'>
-                <a href="evaluations/">Evaluations</a>
+            <span class='col-xs-4'>
+                <a href="evaluations/" class="btn btn-primary">Evaluations</a>
             </span>
-            <span class='col-xs-6'>
-                <a href="tests/">Tests</a>
+            <span class='col-xs-4'>
+                <a href="tests/" class="btn btn-primary">Tests</a>
             </span>
-            <span class="col-xs-12">
-                <a href="events/">Supported events</a>
+            <span class="col-xs-4">
+                <a href="events/" class="btn btn-primary">Supported events</a>
             </span>
         </span>
     </center>

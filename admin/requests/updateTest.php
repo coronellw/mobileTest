@@ -13,6 +13,6 @@ $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_er
 $query = "UPDATE tests SET name = '".$name."', "
         . "action = ".$action.", "
         . "description = '".$description."', "
-        . "tag = '".$tag."' WHERE id_test = ".$id_test.";";
+        . "tag = '".$tag."' WHERE id_test = ".$id_test.";" or die (mysqli_error($link));
 
 $result = $link->query($query);

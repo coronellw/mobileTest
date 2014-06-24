@@ -15,7 +15,7 @@
         include 'db_info.php';
         
         $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
-        $query = "SELECT * FROM evaluations" or die("Error " . mysqli_error($link));
+        $query = "SELECT * FROM evaluations WHERE enable=1" or die("Error " . mysqli_error($link));
         $result = $link->query($query);
         
         $brands_query = "SELECT b.id_brand, b.name FROM brands b ORDER BY b.name;" or die("Error " . mysqli_error($link));

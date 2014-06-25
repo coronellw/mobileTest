@@ -31,15 +31,37 @@ function deleteEvaluation(id_evaluation) {
     });
 }
 
-function toggleEvaluation(id_evaluation) {
+function updateEvaluation(id, name, description, time, tests) {
+    console.log("Preparing to edit an evaluation...");
+    console.log("name: " + name + "\ndescription: " + description + "\ntime: " + time + "\ntests: " + tests);
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/updateEvaluation.php",
+        data: {"id_evaluation": id, "name": name, "description": description, "time": time, "tests": tests}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/evaluations/view.php?evaluation=" + id;
+    }).fail(function(data) {
+        console.log("There was an error while updating this evaluation, please check the logs " + data);
+    });
+}
+
+function toggleEvaluation(id_evaluation, options) {
+    var redirect = typeof options === 'undefined' ? true : options.redirect;
     console.log("Preparing to toggle evaluation...");
-    console.log("must do an ajax request");
+    console.log(redirect);
+
     jQuery.ajax({
         type: "POST",
         url: "/mobile/admin/requests/toggleEvaluation.php",
         data: {"id_evaluation": id_evaluation}
-    }).done(function(data) {
-        window.location.href = "/mobile/admin/evaluations/";
+    }).done(function() {
+        if (redirect) {
+            window.location.href = "/mobile/admin/evaluations/";
+        }else{
+            window.location.reload();
+        }
         console.log(id_evaluation + " was deleted from the database");
     }).fail(function(data) {
         console.log("There was an error while deleting the test " + data);

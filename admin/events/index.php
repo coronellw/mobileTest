@@ -6,7 +6,7 @@
         include '../../db_info.php';
         
         $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error ".  mysqli_error($link));
-        $events_query = "SELECT se.name, se.description FROM supported_events se;" ;
+        $events_query = "SELECT se.id_event, se.name, se.description FROM supported_events se;" ;
         $events = $link->query($events_query);
         ?>
         <link href="/mobile/admin/css/admin.css" rel="stylesheet" type="text/css">
@@ -32,7 +32,7 @@
                         <td><?php echo $event["name"] ?></td>
                         <td><?php echo $event["description"] ?></td>
                         <td>
-                            <a href="#" >Edit</a>
+                            <a href="edit.php?event=<?php $event['id_event'] ?>" >Edit</a>
                             <a href="#" >Delete</a>
                         </td>
                     </tr>
@@ -41,7 +41,7 @@
                     ?>
                 </tbody>
             </table>
-            <span class="row"><span class="col-xs-3"><a href="#" >Create new supported event</a></span></span>.
+            <span class="row"><a href="create.php" class="btn btn-primary" >Create new supported event</a></span>.
         </center>
     </body>
 </html>

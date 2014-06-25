@@ -35,7 +35,7 @@
                         <td><?php echo $eval["time"] ?></td>
                         <td>
                             <a href="view.php?evaluation=<?php echo $eval['id_evaluation'] ?>">View</a>
-                            <a href="#">Edit</a>
+                            <a href="edit.php?evaluation=<?php echo $eval['id_evaluation'] ?>">Edit</a>
                             <a href="#" onclick="toggleEvaluation(<?php echo $eval["id_evaluation"] ?>);" class="<?php if ($eval['enable'] === '1') {
                             echo "label label-danger";
                         } else {

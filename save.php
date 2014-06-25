@@ -11,8 +11,8 @@ $query = "INSERT INTO results(test_date, id_device, id_status_test, id_test, id_
 
 for ($i = 0; $i < count($pruebas); $i++) {
     $prueba = $pruebas[$i];
-    $result = ($prueba[passed] === 'true') ? 1 : 2;
-    $query .= prepareQuery($prueba[id_test], $result);
+    $result = ($prueba['passed'] === 'true') ? 1 : 2;
+    $query .= prepareQuery($prueba['id_test'], $result);
 }
 
 $finalQuery = rtrim($query,',');

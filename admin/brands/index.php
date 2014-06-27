@@ -6,17 +6,15 @@
         include '../../db_info.php';
 
         $link = mysqli_connect($hst, $usrnm, $psswrd, $schm) or die("Error " . mysqli_error($link));
-        $events_query = "SELECT se.id_event, se.name, se.description FROM supported_events se;";
-        $events = $link->query($events_query);
+        $brands_query = "SELECT b.id_brand, b.name, b.description FROM brands b ORDER BY b.name;" or die("Error " . mysqli_error($link));
+        $brands = $link->query($brands_query);
         ?>
         <link href="/mobile/admin/css/admin.css" rel="stylesheet" type="text/css">
         <script src='/mobile/admin/js/helper.js'type="text/javascript"></script>
     </head>
     <body>
     <center>
-        <h1>Supported events</h1>
-        <h2>Are used by the tests to complete an evaluation</h2>
-        <p>The supported events are the pieces of codes that are supported by javascript in order to be evaluated when using the devices</p>
+        <h1>Brands</h1>
         <a href="/mobile/admin/" >Back to index</a>
         <table>
             <thead>
@@ -28,17 +26,17 @@
             </thead>
             <tbody>
                 <?php
-                while ($event = mysqli_fetch_array($events)) {
+                while ($brand = mysqli_fetch_array($brands)) {
                     ?>
                     <tr>
-                        <td><?php echo $event["name"] ?></td>
-                        <td><?php echo $event["description"] ?></td>
+                        <td><?php echo $brand["name"] ?></td>
+                        <td><?php echo $brand["description"] ?></td>
                         <td>
-                            <a href="edit.php?event=<?php echo $event['id_event'] ?>" >Edit</a>
+                            <a href="edit.php?brand=<?php echo $brand['id_brand'] ?>" >Edit</a>
                             <a href="#"
-                               onclick="if (confirm('this will also delete tests that conatins this event.\nARE YOU SURE TO DELETE THIS EVENT?')) {
-                                               console.log('EVENT WILL BE DELETED');
-                                               deleteEvent(<?php echo $event['id_event'] ?>);
+                               onclick="if (confirm('this will also delete models that belongs to this brand.\nARE YOU SURE TO DELETE THIS BRAND?')) {
+                                               console.log('BRAND WILL BE DELETED');
+                                               deleteBrand(<?php echo $brand['id_brand'] ?>);
                                            }"
                                >Delete</a>
                         </td>
@@ -48,7 +46,7 @@
                 ?>
             </tbody>
         </table>
-        <span class="row"><a href="create.php" class="btn btn-primary" >Create new supported event</a></span>.
+        <span class="row"><a href="create.php" class="btn btn-primary" >Create new brand</a></span>.
     </center>
 </body>
 </html>

@@ -14,6 +14,37 @@
         ?>
         <link rel="stylesheet" type="text/css" href="/mobile/admin/css/admin.css">
         <script src="/mobile/admin/js/helper.js" type="text/javascript" ></script>
+        <script src="/mobile/js/jquery.maskedinput.js" type="text/javascript" ></script>
+        <script>
+            jQuery(function() {
+                jQuery('#tag').mask("aaa?aaaaa", {placeholder: " "});
+            });
+            
+            function sendRequest() {
+                var name = document.getElementById('name').value;
+                var action = document.getElementById('action').value;
+                var description = document.getElementById('description').value;
+                var txt = document.getElementById('tag').value;
+                var evaluation = document.getElementById('evaluation').value;
+                var tag = /[a-z]{3,8}/g.exec(txt), send = true, msg = "";
+                
+                if (name.length < 4) {
+                    msg += " - Name is too short\n";
+                }
+                
+                if (tag === null) {
+                    send = false;
+                    msg += " - Tag didn't meet the required criteria\n";
+                }
+                
+                alert(tag);
+                if (send) {
+                    createNewTest(name, action, description, txt, evaluation);
+                } else {
+                    alert("The following errors were enocuntered...\n"+msg);
+                }
+            }
+        </script>
     </head>
     <body>
         <div class="container">
@@ -64,7 +95,9 @@
                                 <label>Tag name:</label>
                             </td>
                             <td>
-                                <input type="text" required="true" id="tag" >
+                                <input type="text" required="true" id="tag" 
+                                       onfocus="document.getElementById('tip').style.display = 'block';"
+                                       onblur="document.getElementById('tip').style.display = 'none';">
                             </td>
                         </tr>
                         <tr>
@@ -76,14 +109,9 @@
                             </td>
                         </tr>
                     </table>
+                    <div id="tip" style="display: none;" ><b>Tag: </b>Must have from 3 to 8 letters all lowercase, no space or numbers allowed</div>
                     <span class="row" >
-                        <button onclick="createNewTest(
-                                    document.getElementById('name').value, 
-                                    document.getElementById('action').value, 
-                                    document.getElementById('description').value, 
-                                    document.getElementById('tag').value,
-                                    document.getElementById('evaluation').value
-                                    );" type="button" class="btn btn-primary" >
+                        <button onclick="sendRequest();" type="button" class="btn btn-primary" >
                             Create new test
                         </button>
                     </span>

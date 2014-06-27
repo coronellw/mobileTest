@@ -7,14 +7,9 @@ $id_device = filter_input(INPUT_GET, "id_device");
 function getTestResult($fecha, $device) {
     global $link;
 
-    $query = "SELECT t.id_test, r.test_date, d.imei, s.name as status, t.name, t.description, e.name as evaluation "
-            . "FROM results r, devices d, evaluations e, tests t, status s "
-            . "WHERE r.id_evaluation = e.id_evaluation AND "
-            . "r.id_device = d.id_device AND "
-            . "r.id_test = t.id_test AND "
-            . "r.id_status_test = s.id_status AND "
-            . "r.test_date = '" . $fecha . "' AND "
-            . "r.id_device = " . $device ." ORDER BY t.id_test ASC";
+    $query = "SELECT t.id_test, s.name as status, t.name "
+            . "FROM tests t LEFT OUTER JOIN results r ON r.id_test = t.id_test AND r.id_device = " . $device . " AND r.test_date = '" . $fecha . "' LEFT OUTER JOIN status s on r.id_status_test = s.id_status "
+            . " ORDER BY t.tag";
 
     if (!mysqli_query($link, $query)) {
         die("Error: " . mysqli_error($link));
@@ -25,7 +20,15 @@ function getTestResult($fecha, $device) {
     while ($row = mysqli_fetch_array($result)) {
         ?>
         <td class="singleResult <?php echo $row["status"] ?>" >
-            <?php echo $row["name"] ?>
+            <?php if ($row["status"] === "passed") {
+                echo "OK";
+            } else {
+                if ($row['status'] === "failed") {
+                    echo "Fail";
+                } else {
+                    echo "N/A";
+                }
+            } ?>
         </td>
         <?php
     }

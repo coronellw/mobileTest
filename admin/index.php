@@ -48,15 +48,16 @@
             </tbody>
         </table>
         <span class='row'>
-            <span class='col-xs-4'>
-                <a href="evaluations/" class="btn btn-primary">Evaluations</a>
-            </span>
-            <span class='col-xs-4'>
-                <a href="tests/" class="btn btn-primary">Tests</a>
-            </span>
-            <span class="col-xs-4">
-                <a href="events/" class="btn btn-primary">Supported events</a>
-            </span>
+
+            <a href="evaluations/" class="btn btn-primary">Evaluations</a>
+
+            <a href="tests/" class="btn btn-primary">Tests</a>
+
+            <a href="events/" class="btn btn-primary">Supported events</a>
+            
+            <a href="brands/" class="btn btn-primary">Brands</a>
+            
+            <a href="models/" class="btn btn-primary">Models</a>
         </span>
     </center>
 </body>

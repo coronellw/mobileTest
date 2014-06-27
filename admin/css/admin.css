@@ -15,7 +15,7 @@ ol li {
 }
 
 .passed, .failed {
-    border-radius: 8px;
+    border-radius: 0px;
     font-weight: bold;
     padding: 0px 15px;
 }
@@ -42,7 +42,7 @@ table {
 }
 td, th, thead tr th, tbody tr td {
     border: 1px solid black;
-    padding: 2px 10px;
+    padding: 2px 5px;
 }
 
 thead tr th {
@@ -62,6 +62,8 @@ table.stylish td, table.stylish th {
 }
 
 td.singleResult {
+    font-size: 9px;
+    text-align: center;
     padding: 0px;
 }
 
@@ -78,7 +80,7 @@ td.singleResult {
     border: 1px solid black;
     border-radius: 0;    
     margin: 3px;
-    font: 0.8em normal;
+    //font: 0.8em normal;
     padding: 0px 5px;
     overflow: hidden;
     word-wrap: break-word;
@@ -93,3 +95,15 @@ table#evaluations thead tr th, table#evaluations tbody tr td {
     overflow-x: hidden;
     width: 50px;
 } 
+
+.minify{
+    font-size: 14px;
+}
+
+table.stylish tbody tr:hover{
+    background: none;
+}
+
+table tbody tr:hover{
+    background-color: #FFA;
+}

@@ -59,7 +59,7 @@ function toggleEvaluation(id_evaluation, options) {
     }).done(function() {
         if (redirect) {
             window.location.href = "/mobile/admin/evaluations/";
-        }else{
+        } else {
             window.location.reload();
         }
         console.log(id_evaluation + " was deleted from the database");
@@ -156,13 +156,142 @@ function deleteTest(id_test) {
         data: {"id_test": id_test}
     }).done(function(data) {
         window.location.href = "/mobile/admin/tests/";
-        console.log(id_test + " was deleted from the database");
+        console.log(id_test + " was requested to be deleted from the database");
     }).fail(function(data) {
         console.log("There was an error while deleting the test " + data);
     });
 }
 
-/* MODELS AND OTHERS */
+/* SUPPORTED EVENTS */
+function createNewEvent(name, description) {
+    console.log("Preparing to create a new supported event...");
+    console.log("{name: " + name + "\ndescription: " + description + "}");
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/createEvent.php",
+        data: {"name": name, "description": description}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/events/";
+
+    }).fail(function(data) {
+        console.log("There was an error while creating this test, please check the logs " + data);
+    });
+}
+
+function updateEvent(id, name, description) {
+    console.log("Preparing to update an event...");
+    console.log("id: " + id + "\nname: " + name + "\ndescription: " + description);
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/updateEvent.php",
+        data: {"id_event": id, "name": name, "description": description}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/events/";
+        alert("id: " + id + "\nname: " + name + "\naction: " + action + "\ndescription: " + description + "\ntag: " + tag);
+    }).fail(function(data) {
+        console.log("There was an error while updating this test, please check the logs " + data);
+    });
+}
+
+function deleteEvent(id_event) {
+    jQuery.ajax({
+        type: "POST",
+        url: "/mobile/admin/requests/deleteEvent.php",
+        data: {"id_event": id_event}
+    }).done(function() {
+        console.log("Event(" + id_event + ") was requested to be delted");
+        window.location.href = "/mobile/admin/events";
+    }).fail(function(data) {
+        alert("event could not be deleted");
+        console.log("There was an error while deleting the test " + data);
+    });
+}
+
+/* BRANDS */
+function createNewBrand(name, description) {
+    console.log("Preparing to create a new brand...");
+    console.log("{name: " + name + "\ndescription: " + description + "}");
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/createBrand.php",
+        data: {"name": name, "description": description}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/brands/";
+    }).fail(function(data) {
+        console.log("There was an error while creating this test, please check the logs " + data);
+    });
+}
+
+function updateBrand(id, name, description) {
+    console.log("Preparing to update a brand...");
+    console.log("id: " + id + "\nname: " + name + "\ndescription: " + description);
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/updateBrand.php",
+        data: {"id_brand": id, "name": name, "description": description}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/brands/";
+        alert("id: " + id + "\nname: " + name + "\naction: " + action + "\ndescription: " + description + "\ntag: " + tag);
+    }).fail(function(data) {
+        console.log("There was an error while updating this test, please check the logs " + data);
+    });
+}
+
+function deleteBrand(id_brand) {
+    jQuery.ajax({
+        type: "POST",
+        url: "/mobile/admin/requests/deleteBrand.php",
+        data: {"id_brand": id_brand}
+    }).done(function() {
+        console.log("Brand(" + id_brand + ") was requested to be delted");
+        window.location.href = "/mobile/admin/brands";
+    }).fail(function(data) {
+        alert("Brand could not be deleted");
+        console.log("There was an error while deleting the brand " + data);
+    });
+}
+
+/* MODELS */
+function createNewModel(name, model, brand) {
+    console.log("Preparing to create a new model...");
+    console.log("{name: " + name + "\nmodel: " + model + "\nid_brand:" + brand + "}");
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/createModel.php",
+        data: {"name": name, "model": model, "id_brand": brand}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/models/";
+    }).fail(function(data) {
+        console.log("There was an error while creating this model, please check the logs " + data);
+    });
+}
+
+function updateModel(id, name, model, brand) {
+    console.log("Preparing to edit a model...");
+    console.log("\nid: " + id + "\nname: " + name + "\nmodel: " + model + "\nbrand: " + brand);
+
+    jQuery.ajax({
+        type: "GET",
+        url: "/mobile/admin/requests/updateModel.php",
+        data: {"id_model": id, "name": name, "model": model, "brand": brand}
+    }).done(function(data) {
+        console.log("No error was detected recieved " + data);
+        window.location.href = "/mobile/admin/models/";
+    }).fail(function(data) {
+        console.log("There was an error while updating this evaluation, please check the logs " + data);
+    });
+}
+
 function updateModels(id_model) {
     id_model = typeof id_model !== 'undefined' ? id_model : null;
     jQuery.ajax({
@@ -173,5 +302,19 @@ function updateModels(id_model) {
         document.getElementById("model").innerHTML = data;
     }).fail(function(data) {
         alert("Unable to load " + data);
+    });
+}
+
+function deleteModel(id_model) {
+    jQuery.ajax({
+        type: "POST",
+        url: "/mobile/admin/requests/deleteModel.php",
+        data: {"id_model": id_model}
+    }).done(function() {
+        console.log("Model(" + id_model + ") was requested to be delted");
+        window.location.href = "/mobile/admin/models";
+    }).fail(function(data) {
+        alert("Model could not be deleted");
+        console.log("There was an error while deleting the model " + data);
     });
 }

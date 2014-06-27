@@ -15,6 +15,8 @@
     <body>
         <center>
             <h1>Tests</h1>
+            <h2>A test evaluates a supported event</h2>
+            <p>The action describes the event that will be evaluated in javascript code</p>
             <a href="/mobile/admin/" >Back to index</a>
             <table>
                 <thead>

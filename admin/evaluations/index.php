@@ -15,6 +15,8 @@
     <body>
     <center>
         <h1>Evaluations</h1>
+        <h2>Evaluations performs test</h2>
+        <p>An evaluation performs multiple tests, you can see which tests are related to an evaluation by clicking on view</p>
         <a href="/mobile/admin/" >Back to index</a>
         <table>
             <thead>

@@ -107,3 +107,21 @@ table.stylish tbody tr:hover{
 table tbody tr:hover{
     background-color: #FFA;
 }
+
+.message {
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 3px;
+    padding: 4px;
+}
+
+.error{
+    background: #f33;
+    color: white;
+}
+
+.warning{
+    background: #ff3;
+    color: black;
+}

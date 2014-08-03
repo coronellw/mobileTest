@@ -1,0 +1,21 @@
+<h2>{{title}}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>IMEI</th>
+            <th>Last test</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="device in devices">
+            <td>{{device.imei}}</td>
+            <td>{{device.last_test}}</td>
+            <td>
+                <a ng-href="#/devices/view/{{device.imei}}">View</a>
+                <a ng-href="#/devices/edit/{{device.imei}}">Edit</a>
+                <a ng-href="#">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

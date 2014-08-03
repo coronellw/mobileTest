@@ -1,0 +1,20 @@
+<table>
+    <thead>
+        <tr>
+            <th>IMEI</th>
+            <th>Last test</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="device in devices">
+            <td ng-bind="device.imei"></td>
+            <td ng-bind="device.last_use"></td>
+            <td>
+                <a ng-href="#/devices/view/{{device.imei}}">View</a>
+                <a ng-click="delete($index)">Delete</a>
+                <a ng-href="#/devices/edit/{{device.imei}}">Edit</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

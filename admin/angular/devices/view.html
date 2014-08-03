@@ -1,0 +1,38 @@
+<h2>{{title}}</h2>
+
+<div>
+    <label>IMEI:</label>
+    <span id="imei">{{device.imei}}</span>
+</div>
+<div ng-show="device.brand" >
+    <label>Brand:</label>
+    <span id="brand">{{device.brand}}</span>
+</div>
+<div ng-show="device.model">
+    <label>Model:</label>
+    <span id="model">{{device.model}}</span>
+</div>
+<a href="#/devices">Back to index</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Evaluation</th>
+            <th>Overall status</th>
+            <th ng-repeat="test in tests">{{test.tag}}</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        <tr ng-repeat="evaluation in device.evaluations">
+            <td>{{evaluation.date}}</td>
+            <td class="evaluation">{{evaluation.name}}</td>
+            <td class="{{evaluation.status}} minify">{{evaluation.status}}</td>
+            <td ng-repeat="test in evaluation.tests" class="{{test.status}} singleResult" >
+                {{test.status}}
+                <span ng-hide="test.status">N/A</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

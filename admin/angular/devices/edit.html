@@ -1,0 +1,50 @@
+<h2>{{title}}</h2>
+<a href="#/devices">Back to device list</a>
+<form name="deviceForm">
+    <table class="stylish">
+        <tr>
+            <td>IMEI: </td>
+            <td><input type="text" 
+                       name ="imei"
+                       ng-model="device.imei" 
+                       ng-minlength="4"
+                       ng-maxlength="15"
+                       required >
+                <div ng-messages="deviceForm.imei.$error" 
+                     ng-messages-include="/admin/angular/errors/devices.html"
+                     ng-messages-multiple>
+                    <div ng-message="required" class='error message'>You can't leave the IMEI blank!</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Name: </td>
+            <td><input type="text" ng-model="device.name" ></td>
+        </tr>
+        <tr>
+            <td>Brand: </td>
+            <td>
+                <select ng-model="device.id_brand" ng-options="brand.id_brand as brand.name for brand in brands" >
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Model: </td>
+            <td>
+                <select ng-model="device.id_model" ng-options="model.id_model as model.name for model in models" >
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Last time used: </td>
+            <td>
+                <span>{{device.last_use}}</span>
+            </td>
+        </tr>
+    </table>
+    <button type="submit" 
+            ng-click="updateDevice()" 
+            class="btn btn-primary" >
+        Save changes
+    </button>
+</form>

@@ -11,7 +11,7 @@
                        ng-maxlength="15"
                        required >
                 <div ng-messages="deviceForm.imei.$error" 
-                     ng-messages-include="/admin/angular/errors/devices.html"
+                     ng-messages-include="/admin/angular/partials/errors.html"
                      ng-messages-multiple>
                     <div ng-message="required" class='error message'>You can't leave the IMEI blank!</div>
                 </div>

@@ -1,20 +1,22 @@
 <h2>{{title}}</h2>
 <a href="#/">Back to index</a>
-<table>
+<table ng-table>
     <thead>
         <tr>
-            <th>IMEI</th>
-            <th>Last test</th>
+            <th>Name</th>
+            <th>Description</th>
             <th>Options</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="device in filteredDevices">
-            <td>{{device.imei}}</td>
-            <td>{{device.last_test}}</td>
+        <tr ng-repeat="brand in filteredBrands">
+            <td>{{brand.name}}</td>
             <td>
-                <a ng-href="#/devices/view/{{device.imei}}">View</a>
-                <a ng-href="#/devices/edit/{{device.imei}}">Edit</a>
+                <span ng-show="brand.description">{{brand.description}}</span>
+                <span ng-hide="brand.description">Not available</span>
+            </td>
+            <td>
+                <a ng-href="#/brands/edit/{{brand.id_brand}}">Edit</a>
                 <a ng-click="remove($index)">Delete</a>
             </td>
         </tr>

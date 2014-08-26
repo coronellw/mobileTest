@@ -11,7 +11,7 @@ $query = "SELECT m.* FROM devices d, models m WHERE d.id_model = m.id_model AND 
 $result = $link->query($query);
 
 if (mysqli_num_rows($result) > 0) {
-    $model = mysqli_fetch_array($result);
+    $model = mysqli_fetch_assoc($result);
     $response['result'] = "ok";
     $response['model'] = $model;
 } else {

@@ -1,4 +1,4 @@
-var elapsedTime = 0, timeToCompleteTest = 0;
+var elapsedTime = 0, timeToCompleteTest = 0, errorCounter = 0;
 var listeners = new Array();
 window.onload = function() {
     test.container = document.getElementsByClassName("ui-page")[0];
@@ -135,7 +135,6 @@ function savePosition(e) {
     document.getElementById("initialy").innerHTML = mouse.initialY;
     e.preventDefault();
 }
-;
 
 function moving(e) {
     var touchobj = e.changedTouches[0];
@@ -156,7 +155,6 @@ function saveEndingPosition(e) {
     document.getElementById("finaly").innerHTML = mouse.finalY;
     e.preventDefault();
 }
-;
 
 function checkIMEI() {
     var retrievedIMEI = document.getElementById("imei").value;
@@ -168,19 +166,18 @@ function checkIMEI() {
         test.imei = retrievedIMEI;
         window.location.href = "test.php?imei=" + retrievedIMEI + "&eval_type=" + eval_type;
     }
-    ;
 }
-;
 
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
-;
 
 function send_results() {
     var resultados = [];
     var eval_status = 3; // 3 means that the test was not performed at all
+    jQuery("#send_btn").attr("disabled", true); // desabilita el envio de pruebas temporalmente
+    stopTest(); //detiene los contadores
 
     for (var index in pruebas) {
         var prueba = pruebas[index];
@@ -190,26 +187,32 @@ function send_results() {
             prueba.passed = false;
         }
     }
-
+    
     if (resultados.length === pruebas.length) {
         console.log("all test passed!!!");
         eval_status = 1; // 1 means all test were passed
         test.container.classList.remove("error");
-        test.container.classList.remove("waiting");
-        test.container.classList.add("success");
+        test.container.classList.remove("success");
+        test.container.classList.add("waiting");
+        jQuery("#reset").html("Siguiente prueba");
+        jQuery("#reset").attr("onclick","screenTest()");
     } else {
-        if (resultados.length === 0) {
-            console.log("You haven't complete any test");
+        //verifica cuantas veces ha fallado la prueba
+        errorCounter++;
+        if (errorCounter >= 3) {
+            jQuery("#send_btn").html("PRUEBA FALLIDA");
             test.container.classList.remove("success");
             test.container.classList.remove("waiting");
             test.container.classList.add("error");
         } else {
-            console.log("Passed : " + resultados.length + "\nFailed : " + (pruebas.length - resultados.length) + "\nTotal : " + pruebas.length);
-            eval_status = 2; //2 means some test passed but not all of them
-            test.container.classList.remove("success");
-            test.container.classList.remove("error");
-            test.container.classList.add("waiting");
+            if (resultados.length === 0) {
+                console.log("You haven't complete any test");
+            } else {
+                console.log("Passed : " + resultados.length + "\nFailed : " + (pruebas.length - resultados.length) + "\nTotal : " + pruebas.length);
+                eval_status = 2; //2 means some test passed but not all of them
+            }
         }
+
     }
 
     jQuery.ajax({
@@ -223,37 +226,52 @@ function send_results() {
     });
 }
 
-function reset() {
-    for (var index in pruebas) {
-        var prueba = pruebas[index];
-        document.getElementById(prueba.tag).classList.remove("passed");
-        prueba.passed = false;
-    }
-
+function stopTest(){
+    // resetea los contadores
     window.clearInterval(test.interval);
-    window.clearTimeout(test.globalTimeout);
+    window.clearTimeout(test.globalTimeout);    
+}
 
-    test.globalTimeout = setTimeout(function() {
-        clearInterval(test.interval);
-        jQuery("#send_btn").click();
-        document.getElementById("timer").innerHTML = 0;
-    }, timeToCompleteTest);
+function reset() {
+    if (errorCounter < 3) {
+        // Habilita el envio de pruebas nuevamente
+        jQuery("#send_btn").attr("disabled", false);
+        
+        // Este ciclo resetea el status de todas las pruebas
+        for (var index in pruebas) {
+            var prueba = pruebas[index];
+            document.getElementById(prueba.tag).classList.remove("passed");
+            prueba.passed = false;
+        }
 
-    test.container.classList.remove("success");
-    test.container.classList.remove("error");
-    test.container.classList.add("waiting");
-    elapsedTime = 1;
-    test.interval = setInterval(function() {
-        document.getElementById("timer").innerHTML = (timeToCompleteTest / 1000) - elapsedTime;
-        elapsedTime++;
-    }, 1000);
+        // resetea los contadores
+        stopTest();
+        test.globalTimeout = setTimeout(function() {
+            clearInterval(test.interval);
+            jQuery("#send_btn").click();
+            document.getElementById("timer").innerHTML = 0;
+        }, timeToCompleteTest);
+        elapsedTime = 1;
+        test.interval = setInterval(function() {
+            document.getElementById("timer").innerHTML = (timeToCompleteTest / 1000) - elapsedTime;
+            elapsedTime++;
+        }, 1000);
+
+        // retira los colores de fondo de la pagina
+        test.container.classList.remove("success");
+        test.container.classList.remove("error");
+        test.container.classList.remove("waiting");
+    } else {
+        alert("You already have 3 error, if you wish to re-do this test, please reload this page.");
+        jQuery("#reset").attr("disabled", true);
+    }
 }
 
 function updateModels(id_model) {
     id_model = typeof id_model !== 'undefined' ? id_model : null;
     jQuery.ajax({
         type: "GET",
-        url: "/mobile/admin/requests/getModels.php",
+        url: "/admin/requests/getModels.php",
         data: {"id_brand": document.getElementById("brand").value, "id_model": id_model}
     }).done(function(data) {
         document.getElementById("model").innerHTML = data;
@@ -265,7 +283,7 @@ function updateModels(id_model) {
 function searchDevice() {
     jQuery.ajax({
         type: "GET",
-        url: "/mobile/admin/requests/getDevice.php",
+        url: "/admin/requests/getDevice.php",
         data: {"imei": document.getElementById("imei").value}
     }).done(function(data) {
         if (data !== 'null') {
@@ -284,4 +302,8 @@ function searchDevice() {
             console.log("IMEI not found");
         }
     });
+}
+
+function screenTest(){
+    location.href="screen.php";
 }

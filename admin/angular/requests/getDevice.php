@@ -18,7 +18,7 @@ $query = "SELECT "
 $queries[] = $query;
 
 $device_result = $link->query($query);
-$device = mysqli_fetch_array($device_result);
+$device = mysqli_fetch_assoc($device_result);
 if (isset($options['detailed']) && $options['detailed'] === true) {
 
     $query_evaluations = "SELECT "
@@ -34,7 +34,7 @@ if (isset($options['detailed']) && $options['detailed'] === true) {
     $queries[] = $query_evaluations;
     $evaluations_result = $link->query($query_evaluations);
 
-    while ($evaluation = mysqli_fetch_array($evaluations_result)) {
+    while ($evaluation = mysqli_fetch_assoc($evaluations_result)) {
         $tests = array();
         $query_tests = "SELECT "
                 . "t.id_test, s.name as status, t.name "
@@ -45,7 +45,7 @@ if (isset($options['detailed']) && $options['detailed'] === true) {
                 . " ORDER BY t.tag";
         $queries[] = $query_tests;
         $tests_result = $link->query($query_tests);
-        while ($test = mysqli_fetch_array($tests_result)) {
+        while ($test = mysqli_fetch_assoc($tests_result)) {
             $tests[] = $test;
         }
         $evaluation['tests'] = $tests;

@@ -10,7 +10,7 @@ $query = "SELECT name, description, tag, action FROM tests;" or die("Error " . m
 $result = $link->query($query);
 $tests = array();
 
-while ($test = mysqli_fetch_array($result)) {
+while ($test = mysqli_fetch_assoc($result)) {
     $tests[] = $test;
 }
 

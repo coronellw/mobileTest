@@ -7,7 +7,7 @@ $query = "SELECT name, description, time, enable FROM evaluations;" or die("Erro
 $result = $link->query($query);
 $evaluations = array();
 
-while ($evaluation = mysqli_fetch_array($result)) {
+while ($evaluation = mysqli_fetch_assoc($result)) {
     $evaluations[] = $evaluation;
 }
 

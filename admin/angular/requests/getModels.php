@@ -13,7 +13,7 @@ if (isset($json_data['id_brand'])) {
     $query = "SELECT * FROM models ORDER BY name;" or die("Error " . mysqli_error($link));
 }
 $result = $link->query($query);
-while ($model = mysqli_fetch_array($result)) {
+while ($model = mysqli_fetch_assoc($result)) {
     $models[] = $model;
 }
 

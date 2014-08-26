@@ -13,13 +13,15 @@
         <![endif]-->
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <!-- ORIGINAL VERSION: https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js -->
+        <script src="/js/jquery.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="/js/bootstrap.min.js"></script>
         
         <script src="/admin/js/angular.js"></script>
         <script src="/admin/js/angular-route.js"></script>
         <script src="/admin/js/angular-messages.js"></script>
+        <script src="/admin/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
         <script src="/admin/js/app.js"></script>
         <script src="/admin/js/controllers.js"></script>
         <script src="/admin/js/services.js"></script>
@@ -28,6 +30,7 @@
     </head>
     <body>
     <center>
+        <div ng-inclued="/admin/angular/partials/messages.html"></div>
         <div ng-view></div>
     </center>
 </body>

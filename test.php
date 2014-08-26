@@ -41,7 +41,7 @@
             ?>
             <center>
                 <header>
-                    <button onclick="reset();">Reset</button>
+                    <button id="reset" onclick="reset();">Reset</button>
                     <button id="send_btn" onclick="send_results();" >Enviar prueba</button>
                 </header>
             </center>

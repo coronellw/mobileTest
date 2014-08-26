@@ -7,7 +7,7 @@ $query = "SELECT name, description, tag, action FROM tests ORDER BY tag;" or die
 $result = $link->query($query);
 $tests = array();
 
-while ($test = mysqli_fetch_array($result)) {
+while ($test = mysqli_fetch_assoc($result)) {
     $tests[] = $test;
 }
 

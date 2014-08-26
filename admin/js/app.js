@@ -1,4 +1,4 @@
-var mobile = angular.module('mobile', ['ngMessages','ngRoute']);
+var mobile = angular.module('mobile', ['ngMessages','ngRoute','ui.bootstrap']);
 
 function routes($routeProvider) {
     $routeProvider.when('/', {
@@ -13,6 +13,15 @@ function routes($routeProvider) {
     }).when('/devices/edit/:imei', {
         controller: 'EditDeviceController',
         templateUrl: 'admin/angular/devices/edit.html'
+    }).when('/brands', {
+        controller: 'IndexBrandController',
+        templateUrl: 'admin/angular/brands/list.html'
+    }).when('/brands/view/:id_brand', {
+        controller: 'ViewBrandController',
+        templateUrl: 'admin/angular/brands/view.html'
+    }).when('/brands/edit/:id_brand', {
+        controller: 'EditBrandController',
+        templateUrl: 'admin/angular/brands/edit.html'
     }).otherwise({
         redirectTo: '/'
     });

@@ -1,0 +1,23 @@
+<h2>{{title}}</h2>
+<a href="#/brands">Back to list</a>
+<form>
+    <table class="stylish">
+            <tr>
+                <td>
+                    <label>Name: </label>
+                </td>
+                <td>
+                    <input ng-model="brand.name" >
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Description</label>
+                </td>
+                <td>
+                    <textarea ng-model="brand.description"></textarea>
+                </td>
+            </tr>
+    </table>
+    <button ng-click="updateBrand()" class="btn btn-primary">Save changes</button>
+</form>

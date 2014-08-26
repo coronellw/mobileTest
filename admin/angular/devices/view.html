@@ -12,7 +12,7 @@
     <label>Model:</label>
     <span id="model">{{device.model}}</span>
 </div>
-<a href="#/devices">Back to index</a>
+<a href="#/devices">Back to list</a>
 
 <table>
     <thead>
@@ -25,7 +25,7 @@
     </thead>
     
     <tbody>
-        <tr ng-repeat="evaluation in device.evaluations">
+        <tr ng-repeat="evaluation in evaluations">
             <td>{{evaluation.date}}</td>
             <td class="evaluation">{{evaluation.name}}</td>
             <td class="{{evaluation.status}} minify">{{evaluation.status}}</td>
@@ -36,3 +36,20 @@
         </tr>
     </tbody>
 </table>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" items-per-page="itemsPerPage"></pagination>
+        
+    </div>
+</div>
+<div class="row">
+    <span class="col-md-6">
+        <label>Items per page</label>
+        <select ng-model="itemsPerPage"
+                ng-options="size for size in sizes">
+        </select>
+    </span>
+    <span class="col-md-6">
+        <label>Total items in data base is : </label>{{totalItems}}
+    </span>
+</div>

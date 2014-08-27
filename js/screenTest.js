@@ -2,32 +2,38 @@ window.onload = function() {
     init();
 };
 
-var canvas, ctx, hammerTime, flag = false,
+var canvas, ctx, hammerTime, 
+        flag = false,
         prevX = 0,
         currX = 0,
         prevY = 0,
         currY = 0,
         initX = 0,
         initY = 0,
-        xTolerance = 20,
-        yTolerance = 40,
-        dot_flag = false;
+        xTolerance = 50,
+        yTolerance = 50,
+        dot_flag = false,
+        st = {};
 
 var x = "black",
-        y = 2;
+    y = 2;
+
 
 function init() {
-
+    st.container = document.getElementById('can');
     canvas = document.createElement('canvas');
-    canvas.width = screen.availWidth;
-    canvas.height = screen.availHeight;
+    canvas.width = jQuery(window).width();//screen.availWidth;
+    canvas.height = jQuery(window).height();//screen.availHeight;
     ctx = canvas.getContext("2d");
     w = canvas.width;
     h = canvas.height;
+    st.w = canvas.width;
+    st.h = canvas.height;
     hammerTime = new Hammer(canvas, {preventDefault: true});
 
-    document.getElementById('can').appendChild(canvas);
-    console.log("w: " + w + "\nh: " + h);
+    st.container.appendChild(canvas);
+    console.log("w: " + st.w + "\nh: " + st.h);
+    console.log("xTolerance: "+xTolerance+"\nyTolerance: "+yTolerance);
 
     hammerTime.on("dragup dragdown dragleft dragright", function(e) {
         findxy('move', e);
@@ -87,19 +93,28 @@ function draw() {
 function erase() {
     var m = confirm("Want to clear");
     if (m) {
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(0, 0, st.w, st.h);
         document.getElementById("canvasimg").style.display = "none";
     }
 }
 
 function findxy(res, e) {
+    currX = e.gesture.center.pageX;
+    currY = e.gesture.center.pageY;
+    
     if (res === 'down') {
         prevX = currX;
         prevY = currY;
-        currX = e.gesture.center.pageX;
-        currY = e.gesture.center.pageY;
         initX = currX;
         initY = currY;
+        console.log("initial point is ("+initX+", "+initY+")");
+        st.container.classList.remove("error");
+        st.container.classList.remove("success");
+        st.container.classList.remove("waiting");
+
+        if (initX <= xTolerance && initY <= yTolerance) {
+            st.container.classList.add("waiting");
+        }
 
         flag = true;
         dot_flag = true;
@@ -111,30 +126,50 @@ function findxy(res, e) {
             dot_flag = false;
         }
     }
+
     if (res === 'up' || res === "out") {
         flag = false;
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(0, 0, st.w, st.h);
+        console.log("release point is ("+currX+", "+currY+")");
+        var errors = [];
         var error = "";
-        if (e.gesture.center.pageX < (screen.width - xTolerance)) {
-            error += "\nTest failed, x didn't reach the limit, released at " + e.gesture.center.pageX + " when limit is " + screen.width;
+        errorMsg = "";
+
+        if (currX < (st.w - xTolerance)) {
+            errorMsg = "x didn't reach the limiet at " + currX + " when limit is " + st.w;
+            error += "\nTest failed, " + errorMsg;
+            errors.push({code: 1, message: errorMsg});
         }
 
-        if (e.gesture.center.pageY < (screen.height - yTolerance)) {
-            error += "\nTest failed, y didn't reach the limit " + e.gesture.center.pageY + " when limit is " + screen.height;
+        if (currY < (st.h - yTolerance)) {
+            errorMsg = "y didn't reach the limit " + currY + " when limit is " + st.h;
+            error += "\nTest failed, " + errorMsg;
+            errors.push({code:2, message: errorMsg});
         }
 
         if (initX > xTolerance) {
-            error += "\nYou didn't start within the tolerance rate, you started x at "+initX;
+            errorMsg = "The test didn't start within the tolerance rate, you started x at "+initX;
+            error += "\n"+errorMsg;
+            errors.push({code:3, message: errorMsg});
         }
 
         if (initY > yTolerance) {
-            error += "\nYou didn't start within the tolerance rate, you started y at "+initY;
+            errorMsg = "You didn't start within the tolerance rate, you started y at "+initY;
+            error += "\n" + errorMsg;
+            errors.push({code:4, message: errorMsg});
+
         }
 
-        if (error.length > 0) {
-            alert(error);
+        if (errors.length > 0) {
+            console.log("Test failed");
+            st.container.classList.remove("success");
+            st.container.classList.remove("waiting");
+            st.container.classList.add('error');
         }else{
-            alert("Test passed, data saved");
+            console.log("Test passed, data saved");
+            st.container.classList.remove("error");
+            st.container.classList.remove("waiting");
+            st.container.classList.add('success');
         }
     }
     if (res === 'move') {

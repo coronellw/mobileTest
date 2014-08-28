@@ -170,6 +170,7 @@ function findxy(res, e) {
             st.container.classList.remove("error");
             st.container.classList.remove("waiting");
             st.container.classList.add('success');
+            
         }
     }
     if (res === 'move') {
@@ -181,4 +182,19 @@ function findxy(res, e) {
             draw();
         }
     }
+}
+
+function saveResult(resultado, id_test, status_test){
+    jQuery.ajax({
+        type: "GET",
+        url: "/admin/requests/saveSingleTest.php",
+        data: {fecha: fecha, device: device, resultado: resultado, test: id_test, status_test: status_test, evaluation: evaluation}
+
+        // $date = filter_input(INPUT_GET, "fecha");
+        // $id_device = filter_input(INPUT_GET, "device");
+        // $resultado = filter_input(INPUT_GET, "resultado");
+        // $test = filter_input(INPUT_GET, "test");
+        // $status_test = filter_input(INPUT_GET, "status_test");
+        // $evaluation = filter_input(INPUT_GET, "evaluation");
+    });
 }

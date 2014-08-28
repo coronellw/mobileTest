@@ -12,7 +12,8 @@
         <script>
             var device = <?php echo $id_device ?>;
             var evaluation = <?php echo $evaluation ?>;
-            var fecha = <?php echo $fecha ?>;
+            var fecha = "<?php echo $fecha ?>";
+            console.log("Device: "+device+"\nEvaluation: "+evaluation+"\nFecha: "+fecha);
         </script>
         <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/hammer.min.js"></script>

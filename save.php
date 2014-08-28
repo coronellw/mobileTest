@@ -18,9 +18,11 @@ for ($i = 0; $i < count($pruebas); $i++) {
 $finalQuery = rtrim($query,',');
 $finalQuery .=";";
 
-if (mysqli_query($link, $finalQuery)) {
+$resultado = $link->query($finalQuery);
+if ($resultado && mysqli_affected_rows($link)>0) {
+    $last_id = mysqli_insert_id($link);
+}else{
     die("Error" . mysqli_error($link));
-    $last_id = mysql_insert_id();
 }
 
 function prepareQuery($test, $test_result) {

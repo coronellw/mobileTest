@@ -21,6 +21,8 @@ var x = "black",
 
 function init() {
     st.container = document.getElementById('can');
+    st.errorCount = 0;
+    st.resultado = 2;
     canvas = document.createElement('canvas');
     canvas.width = jQuery(window).width();//screen.availWidth;
     canvas.height = jQuery(window).height();//screen.availHeight;
@@ -165,12 +167,18 @@ function findxy(res, e) {
             st.container.classList.remove("success");
             st.container.classList.remove("waiting");
             st.container.classList.add('error');
+            st.errorCount ++;
+            st.result = 2;
+            if (st.errorCount > 2) {
+                saveResult(st.resultado, 33, st.result)
+            };
         }else{
             console.log("Test passed, data saved");
             st.container.classList.remove("error");
             st.container.classList.remove("waiting");
             st.container.classList.add('success');
-            
+            st.result = 1;
+            saveResult(st.resultado,33,st.result);
         }
     }
     if (res === 'move') {
@@ -185,16 +193,9 @@ function findxy(res, e) {
 }
 
 function saveResult(resultado, id_test, status_test){
-    jQuery.ajax({
+    return jQuery.ajax({
         type: "GET",
         url: "/admin/requests/saveSingleTest.php",
         data: {fecha: fecha, device: device, resultado: resultado, test: id_test, status_test: status_test, evaluation: evaluation}
-
-        // $date = filter_input(INPUT_GET, "fecha");
-        // $id_device = filter_input(INPUT_GET, "device");
-        // $resultado = filter_input(INPUT_GET, "resultado");
-        // $test = filter_input(INPUT_GET, "test");
-        // $status_test = filter_input(INPUT_GET, "status_test");
-        // $evaluation = filter_input(INPUT_GET, "evaluation");
     });
 }

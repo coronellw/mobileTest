@@ -221,9 +221,9 @@ function send_results() {
         console.log("The test data was sent successfully");
         
         json = JSON.parse(data);
-        if (json.fecha !== 'undefined') {
+        if (json.test_date !== 'undefined') {
             jQuery("#reset").html("Siguiente prueba");
-            jQuery("#reset").attr("onclick","screenTest('"+json.fecha+"')");
+            jQuery("#reset").attr("onclick","screenTest('"+json.test_date+"')");
         };
     }).fail(function() {
         console.log("There was an error while sending the results to the database");
@@ -310,9 +310,10 @@ function searchDevice() {
 
 function screenTest(fecha){
     var url = "screen.php";
+    alert(fecha);
     var form = jQuery(
         "<form action = '"+url+"' method='POST'>"+
-            "<input type='hidden' name='date' value='"+fecha+"''>"+
+            "<input type='hidden' name='fecha' value='"+fecha+"''>"+
             "<input type='hidden' name='id_device' value='"+id_device+"'>"+
             "<input type='hidden' name='evaluation' value='"+id_evaluation+"'>"+
         "</form>");

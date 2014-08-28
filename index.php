@@ -71,7 +71,6 @@
                 </table>
                 <button type="button" onclick="checkIMEI();">Start testing</button>
             </form>
-            <a href="screen.html">Screen test</a>
         </center>
     </body>
 </html>

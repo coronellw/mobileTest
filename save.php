@@ -20,9 +20,19 @@ $finalQuery .=";";
 
 if (mysqli_query($link, $finalQuery)) {
     die("Error" . mysqli_error($link));
+    $last_id = mysql_insert_id();
 }
 
 function prepareQuery($test, $test_result) {
     global $id_device, $eval_status, $eval_type;
     return "(NOW()," . $id_device . "," . $test_result . "," . $test . "," . $eval_status . "," . $eval_type . "),";
+}
+
+$q_date = "SELECT test_date, id_status_evaluation FROM results WHERE id_result = $last_id";
+$r_date = $link->query($q_date);
+
+if ($r_date && mysqli_num_rows($r_date) > 0) {
+	$dato = mysqli_fetch_assoc($r_date);
+	$dato['eval_type'] =  $eval_type;
+	echo json_encode($dato);
 }

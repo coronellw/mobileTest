@@ -1,4 +1,4 @@
-var elapsedTime = 0, timeToCompleteTest = 0, errorCounter = 0;
+var elapsedTime = 0, timeToCompleteTest = 0, errorCounter = 0, id_result = 0;
 var listeners = new Array();
 window.onload = function() {
     test.container = document.getElementsByClassName("ui-page")[0];
@@ -194,8 +194,6 @@ function send_results() {
         test.container.classList.remove("error");
         test.container.classList.remove("success");
         test.container.classList.add("waiting");
-        jQuery("#reset").html("Siguiente prueba");
-        jQuery("#reset").attr("onclick","screenTest()");
     } else {
         //verifica cuantas veces ha fallado la prueba
         errorCounter++;
@@ -219,8 +217,14 @@ function send_results() {
         type: "POST",
         url: "save.php",
         data: {"pruebas": pruebas, "device": id_device, "eval_type": id_evaluation, "eval_status": eval_status}
-    }).done(function() {
+    }).done(function(data) {
         console.log("The test data was sent successfully");
+        
+        json = JSON.parse(data);
+        if (json.fecha !== 'undefined') {
+            jQuery("#reset").html("Siguiente prueba");
+            jQuery("#reset").attr("onclick","screenTest('"+json.fecha+"')");
+        };
     }).fail(function() {
         console.log("There was an error while sending the results to the database");
     });
@@ -304,6 +308,13 @@ function searchDevice() {
     });
 }
 
-function screenTest(){
-    location.href="screen.php";
+function screenTest(fecha){
+    var url = "screen.php";
+    var form = jQuery(
+        "<form action = '"+url+"' method='POST'>"+
+            "<input type='hidden' name='date' value='"+fecha+"''>"+
+            "<input type='hidden' name='id_device' value='"+id_device+"'>"+
+            "<input type='hidden' name='evaluation' value='"+id_evaluation+"'>"+
+        "</form>");
+    jQuery(form).submit();
 }
